@@ -81,6 +81,42 @@ namespace FlowBridger.Parsers {
             };
         }
 
+        private const string GlobalMethod = "globalmethod";
+
+        private const string Version = "version";
+
+        public static SchemaModel ParseSchema ( string content ) {
+            var lines = new DefaultSchemaLines (
+                content
+                    .Replace ( "\r", "" )
+                    .Split ( '\n' )
+            );
+
+            var globalMethods = new List<MethodModel> ();
+            var version = "";
+
+            while ( !lines.IsEndScheme () ) {
+                var currentLine = lines.GetLastLine ();
+                if ( string.IsNullOrWhiteSpace ( currentLine ) ) {
+                    lines.TakeNextLine ();
+                    continue;
+                }
+                var (lineName, lineValue) = ParseLine ( currentLine );
+                var lowerName = lineName.ToLowerInvariant ();
+                if ( lowerName == GlobalMethod ) globalMethods.Add ( ParseMethod ( lines ) );
+                if ( lowerName == Version && string.IsNullOrEmpty ( version ) ) {
+                    version = lineValue;
+                    lines.TakeNextLine ();
+                }
+            }
+
+
+            return new SchemaModel {
+                Version = version,
+                GlobalMethods = globalMethods,
+            };
+        }
+
     }
 
 }

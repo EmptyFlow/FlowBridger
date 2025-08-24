@@ -232,6 +232,80 @@ namespace FlowBridger.UnitTests {
             Assert.Equal ( "LALALA", option.Value );
         }
 
+        [Fact]
+        public void ParseMethod_Completed_Case3 () {
+            //arrange
+            var lines = new DefaultSchemaLines (
+                new List<string> {
+                    "globalmethod testMethod",
+                    "parameter1 int32",
+                    "#csnamespace LALALA",
+                    "parameter2 int64",
+                    "",
+                    "globalmethod lalala"
+                }
+            );
+
+            //act
+            var result = SchemaParser.ParseMethod ( lines );
+
+            //assert
+            Assert.Equal ( "testMethod", result.Name );
+            var firstParameter = result.Parameters.First ();
+            Assert.Equal ( "parameter1", firstParameter.Name );
+            Assert.Equal ( new DataTypeModel ( ParsedDataType.Int32, ParsedContainerDataType.NotContainer ), firstParameter.DataType );
+            var secondParameter = result.Parameters.Last ();
+            Assert.Equal ( "parameter2", secondParameter.Name );
+            Assert.Equal ( new DataTypeModel ( ParsedDataType.Int64, ParsedContainerDataType.NotContainer ), secondParameter.DataType );
+
+            var option = result.Options.First ();
+            Assert.Equal ( "csnamespace", option.Key );
+            Assert.Equal ( "LALALA", option.Value );
+        }
+
+        [Fact]
+        public void ParseSchema_Completed_Case1 () {
+            //arrange
+            var content =
+"""
+version 1.0
+
+globalmethod testMethod
+parameter1 int32
+parameter2 int64
+
+globalmethod test2Method
+parameter3 int32
+parameter4 int64
+""";
+
+            //act
+            var result = SchemaParser.ParseSchema ( content );
+
+            //assert
+            Assert.Equal ( "1.0", result.Version );
+            Assert.Equal ( 2, result.GlobalMethods.Count () );
+
+            var firstGlobalMethod = result.GlobalMethods.First ();
+            var secondGlobalMethod = result.GlobalMethods.Last ();
+
+            Assert.Equal ( "testMethod", firstGlobalMethod.Name );
+            var firstParameter = firstGlobalMethod.Parameters.First ();
+            Assert.Equal ( "parameter1", firstParameter.Name );
+            Assert.Equal ( new DataTypeModel ( ParsedDataType.Int32, ParsedContainerDataType.NotContainer ), firstParameter.DataType );
+            var secondParameter = firstGlobalMethod.Parameters.Last ();
+            Assert.Equal ( "parameter2", secondParameter.Name );
+            Assert.Equal ( new DataTypeModel ( ParsedDataType.Int64, ParsedContainerDataType.NotContainer ), secondParameter.DataType );
+
+            Assert.Equal ( "test2Method", secondGlobalMethod.Name );
+            var firstSecondParameter = secondGlobalMethod.Parameters.First ();
+            Assert.Equal ( "parameter3", firstSecondParameter.Name );
+            Assert.Equal ( new DataTypeModel ( ParsedDataType.Int32, ParsedContainerDataType.NotContainer ), firstSecondParameter.DataType );
+            var secondSecondParameter = secondGlobalMethod.Parameters.Last ();
+            Assert.Equal ( "parameter4", secondSecondParameter.Name );
+            Assert.Equal ( new DataTypeModel ( ParsedDataType.Int64, ParsedContainerDataType.NotContainer ), secondSecondParameter.DataType );
+        }
+
     }
 
 }
