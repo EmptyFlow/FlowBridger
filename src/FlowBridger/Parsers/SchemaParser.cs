@@ -57,8 +57,11 @@ namespace FlowBridger.Parsers {
 
             while ( !lines.IsEnd () ) {
                 var currentLine = lines.GetLastLine ();
-                var (optionName, optionLine) = ParseLine ( line );
-                if ( optionName.StartsWith ( "#" ) ) options.Add ( optionName, optionLine );
+                var (optionName, optionLine) = ParseLine ( currentLine );
+                if ( optionName.StartsWith ( "#" ) ) {
+                    options.Add ( optionName, optionLine );
+                    continue;
+                }
 
                 parameters.Add (
                     new MethodParameterModel {

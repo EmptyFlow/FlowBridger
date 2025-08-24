@@ -9,9 +9,12 @@ namespace FlowBridger.Parsers {
 
         private int m_index = 0;
 
+        public DefaultSchemaLines ( IEnumerable<string> lines ) => m_lines.AddRange ( lines );
+
         public string GetLastLine () => m_lines[m_index];
 
         public bool IsEnd () {
+            if ( IsEndScheme () ) return true;
             if ( string.IsNullOrEmpty ( m_lines[m_index].Trim () ) ) return true;
 
             return false;
@@ -20,7 +23,7 @@ namespace FlowBridger.Parsers {
         public bool IsEndScheme () => m_index >= m_lines.Count ();
 
         public void TakeNextLine () {
-            if ( m_index + 1 >= m_lines.Count ) return;
+            if ( m_index == m_lines.Count ) return;
 
             m_index++;
         }

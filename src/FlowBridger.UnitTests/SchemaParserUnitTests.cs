@@ -179,6 +179,30 @@ namespace FlowBridger.UnitTests {
             Assert.Equal ( new DataTypeModel ( ParsedDataType.Int32, ParsedContainerDataType.Array ), result );
         }
 
+        [Fact]
+        public void ParseMethod_Completed_Case1 () {
+            //arrange
+            var lines = new DefaultSchemaLines (
+                new List<string> {
+                    "globalmethod testMethod",
+                    "parameter1 int32",
+                    "parameter2 int64"
+                }
+            );
+
+            //act
+            var result = SchemaParser.ParseMethod ( lines );
+
+            //assert
+            Assert.Equal ( "testMethod", result.Name );
+            var firstParameter = result.Parameters.First ();
+            Assert.Equal ( "parameter1", firstParameter.Name );
+            Assert.Equal ( new DataTypeModel ( ParsedDataType.Int32, ParsedContainerDataType.NotContainer ), firstParameter.DataType );
+            var secondParameter = result.Parameters.Last ();
+            Assert.Equal ( "parameter2", secondParameter.Name );
+            Assert.Equal ( new DataTypeModel ( ParsedDataType.Int64, ParsedContainerDataType.NotContainer ), secondParameter.DataType );
+        }
+
     }
 
 }
