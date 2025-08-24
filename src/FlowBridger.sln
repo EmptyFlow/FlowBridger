@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.36105.23
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlowBridger", "FlowBridger\FlowBridger.csproj", "{245C0E0B-651F-4CCC-8ADC-070D8BE7AAED}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlowBridger.UnitTests", "FlowBridger.UnitTests\FlowBridger.UnitTests.csproj", "{CA166AD3-E1CA-47B6-B0B7-F08DEB603C62}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{245C0E0B-651F-4CCC-8ADC-070D8BE7AAED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{245C0E0B-651F-4CCC-8ADC-070D8BE7AAED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{245C0E0B-651F-4CCC-8ADC-070D8BE7AAED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{245C0E0B-651F-4CCC-8ADC-070D8BE7AAED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA166AD3-E1CA-47B6-B0B7-F08DEB603C62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA166AD3-E1CA-47B6-B0B7-F08DEB603C62}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA166AD3-E1CA-47B6-B0B7-F08DEB603C62}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA166AD3-E1CA-47B6-B0B7-F08DEB603C62}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {70D3494A-0816-459A-A0A4-535907DC76C9}
+	EndGlobalSection
+EndGlobal
