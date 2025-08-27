@@ -6,7 +6,7 @@ namespace FlowBridger.Models {
 
         public string Name { get; init; } = "";
 
-        public DataTypeModel DataType { get; init; } = new DataTypeModel ( ParsedDataType.Unknown, ParsedContainerDataType.NotContainer );
+        public DataTypeModel ParameterType { get; init; } = new DataTypeModel ( ParsedDataType.Unknown, ParsedContainerDataType.NotContainer );
 
     }
 

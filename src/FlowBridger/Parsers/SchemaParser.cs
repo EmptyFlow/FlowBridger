@@ -70,7 +70,7 @@ namespace FlowBridger.Parsers {
                 parameters.Add (
                     new MethodParameterModel {
                         Name = optionName,
-                        DataType = GetDataType ( optionLine ),
+                        ParameterType = GetDataType ( optionLine ),
                     }
                 );
 

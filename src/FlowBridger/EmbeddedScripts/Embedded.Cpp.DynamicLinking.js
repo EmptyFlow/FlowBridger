@@ -15,14 +15,46 @@ function defineInclude() {
 #endif\n\n`;
 }
 
-function defineParameter(parameter) {
+function getDataType(dataType) {
+    switch (dataType) {
+        case 1:
+            return 'int32_t';
+        case 2:
+            return 'int64_t';
+        case 3:
+            return 'wchar_t*';
+        case 4:
+            return 'char*';
+        case 5:
+            return 'float';
+        case 6:
+            return 'double';
+        case 7:
+            return 'uint32_t';
+        case 8:
+            return 'uint64_t';
+        case 9:
+            return 'void*'; // remake on concrete method
+    }
 
+    return "";
+}
+
+function defineParameter(parameter) {
+    let name = parameter.Name.substring(1);
+    name = parameter.Name[0].toLower() + name;
+
+    const dataType = getDataType(parameter.ParameterType.DataType);
+
+    return `${dataType} ${name}`;
 }
 
 function defineMethod(method) {
     var parameters = method.Parameters.map(a => defineParameter(a)).join(", ");
+    var returnType = getDataType(method.ReturnType.DataType);
+    if (!returnType) returnType = "void";
 
-    return `typedef void (FLOWBRIDGER_DELEGATE_CALLTYPE *${method.Name})(${parameters});\n`;
+    return `typedef ${returnType} (FLOWBRIDGER_DELEGATE_CALLTYPE *${method.Name})(${parameters});\n`;
 }
 
 function defineFile(schema) {
