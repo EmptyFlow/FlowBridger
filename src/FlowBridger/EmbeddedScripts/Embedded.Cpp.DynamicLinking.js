@@ -9,10 +9,17 @@ function defineSection() {
 }
 
 function defineInclude() {
-    return `#if defined(_WIN32)
+    return `#ifndef FLOW_BRIDGER_H_
+#define FLOW_BRIDGER_H_
+
+#if defined(_WIN32)
 #else
 #include <dlfcn.h>
 #endif\n\n`;
+}
+
+function defineEndFile() {
+    return `#endif // FLOW_BRIDGER_H_`;
 }
 
 function getDataType(dataType) {
@@ -26,9 +33,9 @@ function getDataType(dataType) {
         case 4:
             return 'char*';
         case 5:
-            return 'float';
+            return 'float_t';
         case 6:
-            return 'double';
+            return 'double_t';
         case 7:
             return 'uint32_t';
         case 8:
@@ -42,7 +49,7 @@ function getDataType(dataType) {
 
 function defineParameter(parameter) {
     let name = parameter.Name.substring(1);
-    name = parameter.Name[0].toLower() + name;
+    name = parameter.Name[0].toLowerCase() + name;
 
     const dataType = getDataType(parameter.ParameterType.DataType);
 
@@ -65,6 +72,8 @@ function defineFile(schema) {
     for (var globalMethod of schema.GlobalMethods) {
         result += defineMethod(globalMethod);
     }
+
+    result += defineEndFile();
 
     return result;
 }

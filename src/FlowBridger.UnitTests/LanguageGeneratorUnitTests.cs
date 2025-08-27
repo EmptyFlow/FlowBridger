@@ -17,6 +17,16 @@ namespace FlowBridger.UnitTests {
                         Options = new Dictionary<string, string> {
                             ["CppNamespace"] = "librarynamespace"
                         },
+                        Parameters = new List<MethodParameterModel> {
+                            new MethodParameterModel {
+                                Name = "Index",
+                                ParameterType = new DataTypeModel(ParsedDataType.Float, ParsedContainerDataType.NotContainer)
+                            },
+                            new MethodParameterModel {
+                                Name = "SecondParameter",
+                                ParameterType = new DataTypeModel(ParsedDataType.StringUni, ParsedContainerDataType.NotContainer)
+                            }
+                        },
                         ReturnType = new DataTypeModel(ParsedDataType.Int64, ParsedContainerDataType.NotContainer),
                     }
                 ]
