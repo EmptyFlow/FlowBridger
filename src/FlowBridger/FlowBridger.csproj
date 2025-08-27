@@ -14,6 +14,16 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <None Remove="EmbeddedScripts\Embedded.Cpp.DynamicLinking.js" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Include="EmbeddedScripts\Embedded.Cpp.DynamicLinking.js" >
+			<LogicalName>Embedded.Cpp.DynamicLinking</LogicalName>
+		</EmbeddedResource>
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="Jint" Version="4.4.1" />
 	</ItemGroup>
 
