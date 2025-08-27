@@ -1,4 +1,5 @@
 ﻿using FlowBridger.Enums;
+using FlowBridger.Exceptions;
 using FlowBridger.Models;
 
 namespace FlowBridger.Parsers {
@@ -37,7 +38,9 @@ namespace FlowBridger.Parsers {
             }
         }
 
-        public static MethodModel ParseMethod ( ISchemaLines lines ) {
+        public static MethodModel ParseMethod ( ISchemaLines lines, string version ) {
+            if ( version != "1.0" ) throw new BridgerParseException ( "Incorrect scheme version or version not defined. Version must be defined in line like `version 1.0`" );
+
             var line = lines.GetLastLine ();
             var (methodLineName, methodName) = ParseLine ( line );
             if ( string.IsNullOrEmpty ( methodName ) ) lines.ThrowError ( "Global Method", $"The method must have a name in the format: `method <name>`" );
@@ -103,7 +106,7 @@ namespace FlowBridger.Parsers {
                 }
                 var (lineName, lineValue) = ParseLine ( currentLine );
                 var lowerName = lineName.ToLowerInvariant ();
-                if ( lowerName == GlobalMethod ) globalMethods.Add ( ParseMethod ( lines ) );
+                if ( lowerName == GlobalMethod ) globalMethods.Add ( ParseMethod ( lines, version ) );
                 if ( lowerName == Version && string.IsNullOrEmpty ( version ) ) {
                     version = lineValue;
                     lines.TakeNextLine ();

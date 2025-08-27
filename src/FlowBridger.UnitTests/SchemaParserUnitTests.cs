@@ -191,7 +191,7 @@ namespace FlowBridger.UnitTests {
             );
 
             //act
-            var result = SchemaParser.ParseMethod ( lines );
+            var result = SchemaParser.ParseMethod ( lines, "1.0" );
 
             //assert
             Assert.Equal ( "testMethod", result.Name );
@@ -216,7 +216,7 @@ namespace FlowBridger.UnitTests {
             );
 
             //act
-            var result = SchemaParser.ParseMethod ( lines );
+            var result = SchemaParser.ParseMethod ( lines, "1.0" );
 
             //assert
             Assert.Equal ( "testMethod", result.Name );
@@ -247,7 +247,7 @@ namespace FlowBridger.UnitTests {
             );
 
             //act
-            var result = SchemaParser.ParseMethod ( lines );
+            var result = SchemaParser.ParseMethod ( lines, "1.0" );
 
             //assert
             Assert.Equal ( "testMethod", result.Name );
