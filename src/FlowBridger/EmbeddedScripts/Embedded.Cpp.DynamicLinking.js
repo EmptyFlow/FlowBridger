@@ -1,5 +1,10 @@
 ﻿import { schema } from "host"
 
+function redefineName(originalName) {
+    let name = originalName.substring(1);
+    return originalName[0].toLowerCase() + name;
+}
+
 function defineSection() {
     return `#if defined(_WIN32)
 #define FLOWBRIDGER_DELEGATE_CALLTYPE __stdcall
@@ -20,6 +25,33 @@ function defineInclude() {
 
 function defineEndFile() {
     return `#endif // FLOW_BRIDGER_H_`;
+}
+
+function defineClassConstructorInitialization(method) {
+    const methodName = redefineName(method.Name);
+    return `${methodName}method = (${methodName})getExport(lib, "${methodName}");`;
+}
+
+function defineClassMethod(method) {
+    const methodName = redefineName(method.Name);
+    return `${methodName} ${methodName}method = nullptr;`;
+}
+
+function defineClassGlobalMethods(methods) {
+    const methods = methods.map(a => defineClassMethod(a)).join("\n");
+    const constructorInitialization = methods.map(a => defineClassConstructorInitialization(a)).join("\n");
+
+    return `class GlobalFunctions {
+public:
+    GlobalFunctions(std::string pathToLibrary) {
+        void *lib = loadLibrary(pathToLibrary);
+
+        ${constructorInitialization}
+    }
+
+    ${methods}
+}
+`;
 }
 
 function getDataType(dataType) {
@@ -72,6 +104,8 @@ function defineFile(schema) {
     for (var globalMethod of schema.GlobalMethods) {
         result += defineMethod(globalMethod);
     }
+
+    result += defineClassGlobalMethods(schema.GlobalMethods);
 
     result += defineEndFile();
 
