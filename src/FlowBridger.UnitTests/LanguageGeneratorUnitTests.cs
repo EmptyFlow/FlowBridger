@@ -15,7 +15,7 @@ namespace FlowBridger.UnitTests {
                     new MethodModel {
                         Name = "Argus",
                         Options = new Dictionary<string, string> {
-                            ["CppNamespace"] = "librarynamespace"
+                            ["Namespace"] = "arg"
                         },
                         Parameters = new List<MethodParameterModel> {
                             new MethodParameterModel {
@@ -38,7 +38,8 @@ namespace FlowBridger.UnitTests {
             // assert
             Assert.Single ( generatedFiles );
             var file = generatedFiles.First ();
-            Assert.Equal ( "", file.FileName );
+            Assert.Equal ( "flowbridger.h", file.FileName );
+            Assert.Equal ( "", file.Content );
         }
 
     }

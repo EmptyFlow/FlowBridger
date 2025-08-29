@@ -5,6 +5,13 @@ function redefineName(originalName) {
     return originalName[0].toLowerCase() + name;
 }
 
+function convertNameToSnakeCase(value) {
+    return value
+        .replace(/([A-Z])/g, '_$1')
+        .toLowerCase()
+        .replace(/^_/, '');
+}
+
 function defineSection() {
     return `#if defined(_WIN32)
 #define FLOWBRIDGER_DELEGATE_CALLTYPE __stdcall
@@ -29,7 +36,10 @@ function defineEndFile() {
 
 function defineClassConstructorInitialization(method) {
     const methodName = redefineName(method.Name);
-    return `${methodName}method = (${methodName})getExport(lib, "${methodName}");`;
+    const nameInSnakeCase = convertNameToSnakeCase(method.Name);
+    const originalMethodName = method.Options["Namespace"] ? method.Options["Namespace"] + "_" + nameInSnakeCase : nameInSnakeCase;
+
+    return `${methodName}method = (${methodName})getExport(lib, "${originalMethodName}");`;
 }
 
 function defineClassMethod(method) {
@@ -38,10 +48,10 @@ function defineClassMethod(method) {
 }
 
 function defineClassGlobalMethods(methods) {
-    const methods = methods.map(a => defineClassMethod(a)).join("\n");
+    const filteredMethods = methods.map(a => defineClassMethod(a)).join("\n");
     const constructorInitialization = methods.map(a => defineClassConstructorInitialization(a)).join("\n");
 
-    return `class GlobalFunctions {
+    return `\nclass GlobalFunctions {
 public:
     GlobalFunctions(std::string pathToLibrary) {
         void *lib = loadLibrary(pathToLibrary);
@@ -49,7 +59,7 @@ public:
         ${constructorInitialization}
     }
 
-    ${methods}
+    ${filteredMethods}
 }
 `;
 }
@@ -80,7 +90,7 @@ function getDataType(dataType) {
 }
 
 function defineParameter(parameter) {
-    let name = parameter.Name.substring(1);
+    let name = parameter.Name.substring(1); 
     name = parameter.Name[0].toLowerCase() + name;
 
     const dataType = getDataType(parameter.ParameterType.DataType);
@@ -93,7 +103,9 @@ function defineMethod(method) {
     var returnType = getDataType(method.ReturnType.DataType);
     if (!returnType) returnType = "void";
 
-    return `typedef ${returnType} (FLOWBRIDGER_DELEGATE_CALLTYPE *${method.Name})(${parameters});\n`;
+    let methodName = redefineName(method.Name);
+
+    return `typedef ${returnType} (FLOWBRIDGER_DELEGATE_CALLTYPE *${methodName})(${parameters});\n`;
 }
 
 function defineFile(schema) {

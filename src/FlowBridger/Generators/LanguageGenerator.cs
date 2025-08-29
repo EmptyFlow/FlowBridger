@@ -35,11 +35,10 @@ namespace FlowBridger.Generators {
                 var result = function.Call ();
                 if ( result.IsArray () ) {
                     var array = result.AsArray ();
-                    var completedFiles = new List<GeneratedFile> ();
                     if ( array.Length == 2 ) {
                         var fileName = array[0].AsString ();
                         var content = array[1].AsString ();
-                        completedFiles.Add ( new GeneratedFile ( fileName, content, language ) );
+                        resultFiles.Add ( new GeneratedFile ( fileName, content, language ) );
                     }
                 }
             }
