@@ -264,6 +264,23 @@ namespace FlowBridger.UnitTests {
         }
 
         [Fact]
+        public void ParseGlobalOptions_Completed_Case1 () {
+            //arrange
+            var lines = new DefaultSchemaLines (
+                new List<string> {
+                    "globaloption option value"
+                }
+            );
+
+            //act
+            var result = SchemaParser.ParseGlobalOption ( lines, "1.0" );
+
+            //assert
+            Assert.Equal ( "option", result.name );
+            Assert.Equal ( "value", result.value );
+        }
+
+        [Fact]
         public void ParseSchema_Completed_Case1 () {
             //arrange
             var content =

@@ -29,7 +29,10 @@ namespace FlowBridger.UnitTests {
                         },
                         ReturnType = new DataTypeModel(ParsedDataType.Int64, ParsedContainerDataType.NotContainer),
                     }
-                ]
+                ],
+                GlobalOptions = new Dictionary<string, string> {
+                    ["CppFileName"] = "myclassname.h"
+                }
             };
 
             // act
@@ -38,7 +41,7 @@ namespace FlowBridger.UnitTests {
             // assert
             Assert.Single ( generatedFiles );
             var file = generatedFiles.First ();
-            Assert.Equal ( "flowbridger.h", file.FileName );
+            Assert.Equal ( "myclassname.h", file.FileName );
             Assert.Equal ( "", file.Content );
         }
 

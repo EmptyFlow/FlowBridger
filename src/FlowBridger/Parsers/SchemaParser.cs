@@ -84,7 +84,21 @@ namespace FlowBridger.Parsers {
             };
         }
 
+        public static (string name, string value) ParseGlobalOption ( ISchemaLines lines, string version ) {
+            if ( version != "1.0" ) throw new BridgerParseException ( "Incorrect scheme version or version not defined. Version must be defined in line like `version 1.0`" );
+
+            var line = lines.GetLastLine ();
+            var (_, optionLine) = ParseLine ( line );
+            var (name, value) = ParseLine ( optionLine );
+
+            lines.TakeNextLine ();
+
+            return (name, value);
+        }
+
         private const string GlobalMethod = "globalmethod";
+
+        private const string GlobalOptions = "globaloption";
 
         private const string Version = "version";
 
@@ -96,6 +110,7 @@ namespace FlowBridger.Parsers {
             );
 
             var globalMethods = new List<MethodModel> ();
+            var globalOptions = new Dictionary<string, string> ();
             var version = "";
 
             while ( !lines.IsEndScheme () ) {
@@ -107,6 +122,10 @@ namespace FlowBridger.Parsers {
                 var (lineName, lineValue) = ParseLine ( currentLine );
                 var lowerName = lineName.ToLowerInvariant ();
                 if ( lowerName == GlobalMethod ) globalMethods.Add ( ParseMethod ( lines, version ) );
+                if ( lowerName == GlobalOptions ) {
+                    var (optionName, optionValue) = ParseGlobalOption ( lines, version );
+                    globalOptions.Add ( optionName, optionValue );
+                }
                 if ( lowerName == Version && string.IsNullOrEmpty ( version ) ) {
                     version = lineValue;
                     lines.TakeNextLine ();
@@ -117,6 +136,7 @@ namespace FlowBridger.Parsers {
             return new SchemaModel {
                 Version = version,
                 GlobalMethods = globalMethods,
+                GlobalOptions = globalOptions,
             };
         }
 

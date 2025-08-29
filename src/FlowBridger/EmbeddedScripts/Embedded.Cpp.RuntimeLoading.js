@@ -12,6 +12,10 @@ function convertNameToSnakeCase(value) {
         .replace(/^_/, '');
 }
 
+function convertToUpperName(value) {
+    return value.toUpperCase().replace(".", "_");
+}
+
 function defineSection() {
     return `#if defined(_WIN32)
 #define FLOWBRIDGER_DELEGATE_CALLTYPE __stdcall
@@ -21,8 +25,10 @@ function defineSection() {
 }
 
 function defineInclude() {
-    return `#ifndef FLOW_BRIDGER_H_
-#define FLOW_BRIDGER_H_
+    const upperFileName = schema.GlobalOptions["CppFileName"] ? convertToUpperName(schema.GlobalOptions["CppFileName"]) : "FLOW_BRIDGER_H_"
+
+    return `#ifndef ${upperFileName}
+#define ${upperFileName}
 
 #if defined(_WIN32)
 #else
@@ -31,7 +37,9 @@ function defineInclude() {
 }
 
 function defineEndFile() {
-    return `#endif // FLOW_BRIDGER_H_`;
+    const upperFileName = schema.GlobalOptions["CppFileName"] ? convertToUpperName(schema.GlobalOptions["CppFileName"]) : "FLOW_BRIDGER_H_"
+
+    return `#endif // ${upperFileName}`;
 }
 
 function defineClassConstructorInitialization(method) {
@@ -127,8 +135,10 @@ function defineFile(schema) {
 function generateLanguage() {
     if (!schema) return;
 
+    const fileName = schema.GlobalOptions["CppFileName"] ? schema.GlobalOptions["CppFileName"] : "flowbridger.h";
+
     return [
-        "flowbridger.h",
+        fileName,
         defineFile(schema)
     ];
 }
