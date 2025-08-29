@@ -33,7 +33,7 @@ namespace FlowBridger.UnitTests {
             };
 
             // act
-            var generatedFiles = LanguageGenerator.GenerateScheme ( schema, ["Embedded.Cpp.DynamicLinking"] );
+            var generatedFiles = LanguageGenerator.GenerateScheme ( schema, ["Embedded.Cpp.RuntimeLoading"] );
 
             // assert
             Assert.Single ( generatedFiles );

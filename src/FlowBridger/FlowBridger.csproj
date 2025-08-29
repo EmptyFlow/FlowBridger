@@ -15,11 +15,19 @@
 
 	<ItemGroup>
 	  <None Remove="EmbeddedScripts\Embedded.Cpp.DynamicLinking.js" />
+	  <None Remove="EmbeddedScripts\Embedded.Cpp.RuntimeLoading.js" />
+	  <None Remove="EmbeddedScripts\Embedded.CSharp.Import.js" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<EmbeddedResource Include="EmbeddedScripts\Embedded.Cpp.DynamicLinking.js" >
+		<EmbeddedResource Include="EmbeddedScripts\Embedded.Cpp.DynamicLinking.js">
 			<LogicalName>Embedded.Cpp.DynamicLinking</LogicalName>
+		</EmbeddedResource>
+		<EmbeddedResource Include="EmbeddedScripts\Embedded.Cpp.RuntimeLoading.js">
+			<LogicalName>Embedded.Cpp.RuntimeLoading</LogicalName>
+		</EmbeddedResource>
+		<EmbeddedResource Include="EmbeddedScripts\Embedded.CSharp.Import.js">
+			<LogicalName>Embedded.CSharp.Import</LogicalName>
 		</EmbeddedResource>
 	</ItemGroup>
 

@@ -1,5 +1,10 @@
 ﻿import { schema } from "host"
 
+function redefineName(originalName) {
+    let name = originalName.substring(1);
+    return originalName[0].toLowerCase() + name;
+}
+
 function convertNameToSnakeCase(value) {
     return value
         .replace(/([A-Z])/g, '_$1')
@@ -17,11 +22,46 @@ function defineSection() {
 
 function defineInclude() {
     return `#ifndef FLOW_BRIDGER_H_
-#define FLOW_BRIDGER_H_\n\n`;
+#define FLOW_BRIDGER_H_
+
+#if defined(_WIN32)
+#else
+#include <dlfcn.h>
+#endif\n\n`;
 }
 
 function defineEndFile() {
     return `#endif // FLOW_BRIDGER_H_`;
+}
+
+function defineClassConstructorInitialization(method) {
+    const methodName = redefineName(method.Name);
+    const nameInSnakeCase = convertNameToSnakeCase(method.Name);
+    const originalMethodName = method.Options["Namespace"] ? method.Options["Namespace"] + "_" + nameInSnakeCase : nameInSnakeCase;
+
+    return `${methodName}method = (${methodName})getExport(lib, "${originalMethodName}");`;
+}
+
+function defineClassMethod(method) {
+    const methodName = redefineName(method.Name);
+    return `${methodName} ${methodName}method = nullptr;`;
+}
+
+function defineClassGlobalMethods(methods) {
+    const filteredMethods = methods.map(a => defineClassMethod(a)).join("\n");
+    const constructorInitialization = methods.map(a => defineClassConstructorInitialization(a)).join("\n");
+
+    return `\nclass GlobalFunctions {
+public:
+    GlobalFunctions(std::string pathToLibrary) {
+        void *lib = loadLibrary(pathToLibrary);
+
+        ${constructorInitialization}
+    }
+
+    ${filteredMethods}
+}\n
+`;
 }
 
 function getDataType(dataType) {
@@ -50,7 +90,7 @@ function getDataType(dataType) {
 }
 
 function defineParameter(parameter) {
-    let name = parameter.Name.substring(1); 
+    let name = parameter.Name.substring(1);
     name = parameter.Name[0].toLowerCase() + name;
 
     const dataType = getDataType(parameter.ParameterType.DataType);
@@ -63,10 +103,9 @@ function defineMethod(method) {
     var returnType = getDataType(method.ReturnType.DataType);
     if (!returnType) returnType = "void";
 
-    const nameInSnakeCase = convertNameToSnakeCase(method.Name);
-    const methodName = method.Options["Namespace"] ? method.Options["Namespace"] + "_" + nameInSnakeCase : nameInSnakeCase;
+    let methodName = redefineName(method.Name);
 
-    return `FLOWBRIDGER_DELEGATE_CALLTYPE ${returnType} ${methodName}(${parameters});\n`;
+    return `typedef ${returnType} (FLOWBRIDGER_DELEGATE_CALLTYPE *${methodName})(${parameters});\n`;
 }
 
 function defineFile(schema) {
@@ -77,6 +116,8 @@ function defineFile(schema) {
     for (var globalMethod of schema.GlobalMethods) {
         result += defineMethod(globalMethod);
     }
+
+    result += defineClassGlobalMethods(schema.GlobalMethods);
 
     result += defineEndFile();
 

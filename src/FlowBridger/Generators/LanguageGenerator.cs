@@ -46,9 +46,6 @@ namespace FlowBridger.Generators {
             return resultFiles;
         }
 
-        //Embedded.Cpp.RuntimeLoading
-        //Embedded.Cpp.DynamicLinking
-
     }
 
 }
