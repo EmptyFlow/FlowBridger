@@ -16,12 +16,20 @@ function defineSection() {
 }
 
 function defineInclude() {
-    return `#ifndef FLOW_BRIDGER_H_
-#define FLOW_BRIDGER_H_\n\n`;
+    const upperFileName = schema.GlobalOptions["CppFileName"] ? convertToUpperName(schema.GlobalOptions["CppFileName"]) : "FLOW_BRIDGER_H_"
+
+    return `#ifndef ${upperFileName}
+#define ${upperFileName}
+
+#include <string>
+#include <cmath>\n\n
+`;
 }
 
 function defineEndFile() {
-    return `#endif // FLOW_BRIDGER_H_`;
+    const upperFileName = schema.GlobalOptions["CppFileName"] ? convertToUpperName(schema.GlobalOptions["CppFileName"]) : "FLOW_BRIDGER_H_"
+
+    return `#endif // ${upperFileName}`;
 }
 
 function getDataType(dataType) {
@@ -86,8 +94,10 @@ function defineFile(schema) {
 function generateLanguage() {
     if (!schema) return;
 
+    const fileName = schema.GlobalOptions["CppFileName"] ? schema.GlobalOptions["CppFileName"] : "flowbridger.h";
+
     return [
-        "flowbridger.h",
+        fileName,
         defineFile(schema)
     ];
 }
