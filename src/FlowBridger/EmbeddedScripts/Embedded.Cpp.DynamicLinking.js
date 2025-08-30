@@ -1,5 +1,9 @@
 ﻿import { schema } from "host"
 
+function convertToUpperName(value) {
+    return value.toUpperCase().replace(".", "_");
+}
+
 function convertNameToSnakeCase(value) {
     return value
         .replace(/([A-Z])/g, '_$1')
@@ -9,7 +13,9 @@ function convertNameToSnakeCase(value) {
 
 function defineSection() {
     return `#if defined(_WIN32)
-#define FLOWBRIDGER_DELEGATE_CALLTYPE __stdcall
+#define FLOWBRIDGER_DELEGATE_CALLTYPE __declspec(dllexport)
+#elif defined(__GNUC__) || defined(__clang__)
+#define FLOWBRIDGER_DELEGATE_CALLTYPE __attribute__((visibility("default")))
 #else
 #define FLOWBRIDGER_DELEGATE_CALLTYPE
 #endif\n\n`;
@@ -22,7 +28,7 @@ function defineInclude() {
 #define ${upperFileName}
 
 #include <string>
-#include <cmath>\n\n
+#include <cmath>\n
 `;
 }
 
@@ -84,6 +90,7 @@ function defineFile(schema) {
 
     for (var globalMethod of schema.GlobalMethods) {
         result += defineMethod(globalMethod);
+        result += "\n";
     }
 
     result += defineEndFile();

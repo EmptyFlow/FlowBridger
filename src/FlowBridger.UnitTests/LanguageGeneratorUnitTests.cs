@@ -7,7 +7,7 @@ namespace FlowBridger.UnitTests {
     public class LanguageGeneratorUnitTests {
 
         [Fact]
-        public void GenerateScheme_Completed_GlobalMethod_Case1 () {
+        public void GenerateScheme_Completed_GlobalMethod_RuntimeLoading () {
             // arrange
             var schema = new SchemaModel {
                 Version = "1.0",
@@ -110,7 +110,7 @@ public:
         }
 
         [Fact]
-        public void GenerateScheme_Completed_GlobalMethod_Case2 () {
+        public void GenerateScheme_Completed_GlobalMethod_DynamicLinking () {
             // arrange
             var schema = new SchemaModel {
                 Version = "1.0",
@@ -145,6 +145,27 @@ public:
             Assert.Single ( generatedFiles );
             var file = generatedFiles.First ();
             Assert.Equal ( "myclassname.h", file.FileName );
+            var correctContent =
+"""
+#ifndef MYCLASSNAME_H
+#define MYCLASSNAME_H
+
+#include <string>
+#include <cmath>
+
+#if defined(_WIN32)
+#define FLOWBRIDGER_DELEGATE_CALLTYPE __declspec(dllexport)
+#elif defined(__GNUC__) || defined(__clang__)
+#define FLOWBRIDGER_DELEGATE_CALLTYPE __attribute__((visibility("default")))
+#else
+#define FLOWBRIDGER_DELEGATE_CALLTYPE
+#endif
+
+FLOWBRIDGER_DELEGATE_CALLTYPE int64_t arg_argus(float_t index, wchar_t* secondParameter);
+
+#endif // MYCLASSNAME_H
+""".Replace ( "\r", "" );
+            Assert.Equal ( correctContent, file.Content );
             //File.WriteAllText ( "C:/work/Experiments/cpptest/CppTest/file2.h", file.Content );
         }
 
