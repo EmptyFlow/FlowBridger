@@ -30,7 +30,12 @@ function defineInclude() {
     return `#ifndef ${upperFileName}
 #define ${upperFileName}
 
+#include <string>
+#include <cmath>
+#include <cassert>
+
 #if defined(_WIN32)
+#include <windows.h>
 #else
 #include <dlfcn.h>
 #endif\n\n`;
@@ -59,16 +64,43 @@ function defineClassGlobalMethods(methods) {
     const filteredMethods = methods.map(a => defineClassMethod(a)).join("\n");
     const constructorInitialization = methods.map(a => defineClassConstructorInitialization(a)).join("\n");
 
-    return `\nclass GlobalFunctions {
+    return `\nclass ImportFunctions {
+private:
+    void* loadLibrary(const std::wstring& path)
+    {
+#if defined(_WIN32)
+        HMODULE h = ::LoadLibraryW(path.c_str());
+        assert(h != nullptr);
+        return (void*)h;
+#else
+        void *h = dlopen(path.c_str(), RTLD_LAZY | RTLD_LOCAL);
+        assert(h != nullptr);
+        return h;
+#endif
+    }
+
+    void *getExport(void *h, const char *name)
+    {
+#if defined(_WIN32)
+        void *f = ::GetProcAddress((HMODULE)h, name);
+        assert(f != nullptr);
+        return f;
+#else
+        void *f = dlsym(h, name);
+        assert(f != nullptr);
+        return f;
+#endif
+    }
+
 public:
-    GlobalFunctions(std::string pathToLibrary) {
+    ImportFunctions(const std::wstring& pathToLibrary) {
         void *lib = loadLibrary(pathToLibrary);
 
         ${constructorInitialization}
     }
 
     ${filteredMethods}
-}\n
+};\n
 `;
 }
 
