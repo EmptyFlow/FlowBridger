@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "FlowBridger": {
+      "commandName": "Project",
+      "commandLineArgs": "generate -l=\"Embedded.CSharp.Import:C:\\work\\Repositories\\FlowCommandLine\""
+    }
+  }
+}
