@@ -4,6 +4,8 @@
 
         public IEnumerable<string> Languages { get; set; } = [];
 
+        public string Schema { get; set; } = "";
+
     }
 
 }

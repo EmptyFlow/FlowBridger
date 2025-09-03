@@ -80,9 +80,9 @@ function getDataType(dataType) {
         case 6:
             return 'double';
         case 7:
-            return 'uint32';
+            return 'uint';
         case 8:
-            return 'uint64';
+            return 'ulong';
         case 9:
             return 'nint'; // remake on concrete method
     }
@@ -105,9 +105,9 @@ function getInternalDataType(dataType) {
         case 6:
             return 'double';
         case 7:
-            return 'uint32';
+            return 'uint';
         case 8:
-            return 'uint64';
+            return 'ulong';
         case 9:
             return 'nint'; // remake on concrete method
     }
@@ -135,12 +135,66 @@ function definePassedParameter(parameter) {
         case 3:
             return `GetUniStringFromPointer(${convertNameToCamelCase(parameter.Name)})`;
         case 4:
-            return `GetAnsiStringFromPointer(${convertNameToCamelCase(parameter.Name)})`;
+            return `Marshal.PtrToStringAnsi(${convertNameToCamelCase(parameter.Name)}) ?? ""`;
         case 9:
             return 'nint'; // remake on concrete method
     }
 
     return "";
+}
+
+function defineReturnPassType(method) {
+    switch (method.ReturnType.DataType) {
+        case 1:
+        case 2:
+        case 5:
+        case 6:
+        case 7:
+        case 8:
+            return getDataType(method.ReturnType.DataType);
+        case 3:
+        case 4:
+            return `nint`;
+        case 9:
+            return 'nint'; // remake on concrete method
+    }
+
+    return "void";
+}
+
+function defineReturnType(method) {
+    switch (method.ReturnType.DataType) {
+        case 1:
+        case 2:
+        case 5:
+        case 6:
+        case 7:
+        case 8:
+            return getDataType(method.ReturnType.DataType);
+        case 3:
+            return `string`;
+        case 4:
+            return `string`;
+        case 9:
+            return 'nint'; // remake on concrete method
+    }
+
+    return "void";
+}
+
+function defineReturnTypeCall(method, internalCall) {
+    let openBracket = ""
+    let closeBracket = ""
+    if (method.ReturnType.DataType === 3) {
+        openBracket = "Marshal.StringToHGlobalUni("
+        closeBracket = ")"
+    }
+    if (method.ReturnType.DataType === 4) {
+        openBracket = "Marshal.StringToHGlobalAnsi("
+        closeBracket = ")"
+    }
+
+    return `return ${openBracket}${internalCall}${closeBracket};`
 }
 
 function defineMethod(method) {
@@ -149,14 +203,19 @@ function defineMethod(method) {
     const parameters = method.Parameters.map(a => defineParameter(a)).join(', ');
     const passedParameters = method.Parameters.map(a => definePassedParameter(a)).join(', ');;
     const internalParameters = method.Parameters.map(a => defineInternalParameter(a)).join(', ');
+    const returnPassType = defineReturnPassType(method);
+    const returnCsharpType = defineReturnType(method);
+    const internalCall = `${method.Name}Internal(${passedParameters})`;
+    const noReturnType = method.ReturnType.DataType === 0;
+    const internalLine = noReturnType ? `${internalCall};` : `${defineReturnTypeCall(method, internalCall)}`;
 
     return `
         [UnmanagedCallersOnly ( EntryPoint = "${originalMethodName}" )]
-        public static int ${method.Name} ( ${parameters} ) {
-            return ${method.Name}Internal(${passedParameters});
+        public static ${returnPassType} ${method.Name} ( ${parameters} ) {
+            ${internalLine}
         }
 
-        public static partial int ${method.Name}Internal ( ${internalParameters} );\n`;
+        public static partial ${returnCsharpType} ${method.Name}Internal ( ${internalParameters} );\n`;
 
 }
 

@@ -57,12 +57,19 @@ namespace FlowBridger.Parsers {
 
             var options = new Dictionary<string, string> ();
             var parameters = new List<MethodParameterModel> ();
+            DataTypeModel returnMethodType = new DataTypeModel ( ParsedDataType.Unknown, ParsedContainerDataType.NotContainer );
 
             while ( !lines.IsEnd () ) {
                 var currentLine = lines.GetLastLine ();
                 var (optionName, optionLine) = ParseLine ( currentLine );
                 if ( optionName.StartsWith ( "#" ) ) {
                     options.Add ( optionName.Substring ( 1 ), optionLine );
+                    lines.TakeNextLine ();
+                    continue;
+                }
+
+                if ( optionName.ToLowerInvariant () == "returntype" ) {
+                    returnMethodType = GetDataType ( optionLine );
                     lines.TakeNextLine ();
                     continue;
                 }
@@ -81,6 +88,7 @@ namespace FlowBridger.Parsers {
                 Name = methodName,
                 Options = options,
                 Parameters = parameters,
+                ReturnType = returnMethodType
             };
         }
 

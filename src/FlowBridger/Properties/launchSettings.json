@@ -2,7 +2,7 @@
   "profiles": {
     "FlowBridger": {
       "commandName": "Project",
-      "commandLineArgs": "generate -l=\"Embedded.CSharp.Import:C:\\work\\Repositories\\FlowCommandLine\""
+      "commandLineArgs": "generate -l=Embedded.CSharp.Import:C:/work/Repositories/FlowBridger/Repository/FlowBridger/src/FlowBridgerTestLibrary -s=C:/work/Repositories/FlowBridger/Repository/FlowBridger/src/FlowBridger.UnitTests/fullspecschema.spec"
     }
   }
 }
