@@ -24,7 +24,7 @@ CommandLine.Console ()
             SchemaModel? schema = null;
             try {
                 Console.WriteLine ( $"Parse schema: {parameters.Schema}" );
-                var schemaContent = File.ReadAllText ( parameters.Schema );
+                var schemaContent = File.ReadAllText ( Path.GetFullPath ( parameters.Schema ) );
                 schema = SchemaParser.ParseSchema ( schemaContent );
             } catch ( Exception ex ) {
                 Console.WriteLine ( ex.Message );
@@ -67,7 +67,7 @@ CommandLine.Console ()
                 var languagePath = items[generatedFile.Language];
                 try {
                     Console.WriteLine ( $"Save file for language {generatedFile.Language}" );
-                    File.WriteAllText ( Path.Combine ( languagePath, generatedFile.FileName ), generatedFile.Content );
+                    File.WriteAllText ( Path.Combine ( Path.GetFullPath ( languagePath ), generatedFile.FileName ), generatedFile.Content );
                 } catch ( Exception ex ) {
                     Console.WriteLine ( ex.Message );
                     Environment.Exit ( 1 );

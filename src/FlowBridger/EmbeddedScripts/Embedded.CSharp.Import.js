@@ -20,7 +20,8 @@ using System.Text;\n\n`;
 }
 
 function defineLocalHelpers() {
-    return `\n        private static List<byte> m_zeroBytes = [0, 0, 0, 0];
+    return `
+        private static List<byte> m_zeroBytes = [0, 0, 0, 0];
 
         private static string GetUniStringFromPointer ( nint pointer ) {
             if ( RuntimeInformation.IsOSPlatform ( OSPlatform.Linux ) || RuntimeInformation.IsOSPlatform ( OSPlatform.OSX ) ) {
@@ -93,21 +94,16 @@ function getDataType(dataType) {
 function getInternalDataType(dataType) {
     switch (dataType) {
         case 1:
-            return 'int';
         case 2:
-            return 'long';
+        case 5:
+        case 6:
+        case 7:
+        case 8:
+            return getDataType(dataType);
         case 3:
             return 'string';
         case 4:
             return 'string';
-        case 5:
-            return 'float';
-        case 6:
-            return 'double';
-        case 7:
-            return 'uint';
-        case 8:
-            return 'ulong';
         case 9:
             return 'nint'; // remake on concrete method
     }
