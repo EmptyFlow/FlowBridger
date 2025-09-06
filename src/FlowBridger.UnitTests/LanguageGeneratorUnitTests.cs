@@ -154,7 +154,7 @@ public:
 #include <cmath>
 
 #if defined(_WIN32)
-#define FLOWBRIDGER_DELEGATE_CALLTYPE __declspec(dllexport)
+#define FLOWBRIDGER_DELEGATE_CALLTYPE __declspec(dllimport)
 #elif defined(__GNUC__) || defined(__clang__)
 #define FLOWBRIDGER_DELEGATE_CALLTYPE __attribute__((visibility("default")))
 #else

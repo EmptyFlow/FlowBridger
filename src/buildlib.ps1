@@ -1,1 +1,2 @@
 dotnet publish -r win-x64 -c Release --self-contained true FlowBridgerTestLibrary/FlowBridgerTestLibrary.csproj
+Copy-Item -Path "FlowBridgerTestLibrary\bin\Release\net9.0\win-x64\native\*.*" -Destination "CPlusPlusTest/CppTest/flowbridger" 

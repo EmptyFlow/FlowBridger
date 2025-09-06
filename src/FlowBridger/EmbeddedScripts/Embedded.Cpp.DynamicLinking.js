@@ -13,7 +13,7 @@ function convertNameToSnakeCase(value) {
 
 function defineSection() {
     return `#if defined(_WIN32)
-#define FLOWBRIDGER_DELEGATE_CALLTYPE __declspec(dllexport)
+#define FLOWBRIDGER_DELEGATE_CALLTYPE __declspec(dllimport)
 #elif defined(__GNUC__) || defined(__clang__)
 #define FLOWBRIDGER_DELEGATE_CALLTYPE __attribute__((visibility("default")))
 #else
@@ -80,7 +80,7 @@ function defineMethod(method) {
     const nameInSnakeCase = convertNameToSnakeCase(method.Name);
     const methodName = method.Options["Namespace"] ? method.Options["Namespace"] + "_" + nameInSnakeCase : nameInSnakeCase;
 
-    return `FLOWBRIDGER_DELEGATE_CALLTYPE ${returnType} ${methodName}(${parameters});\n`;
+    return `extern "C" FLOWBRIDGER_DELEGATE_CALLTYPE ${returnType} ${methodName}(${parameters});\n`;
 }
 
 function defineFile(schema) {

@@ -14,10 +14,10 @@ if (CMAKE_VERSION VERSION_GREATER 3.12)
 endif()
 
 if (WIN32)
-    target_link_libraries(AniLiberty PRIVATE kernel32)
+    target_link_libraries(CppTest PRIVATE kernel32)
 
-    #target_include_directories(AniLiberty PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/windows-mpv)
-    target_link_libraries(AniLiberty PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/windows-mpv/libmpv.dll.lib")
+    target_include_directories(CppTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/flowbridger)
+    target_link_libraries(CppTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/flowbridger/FlowBridgerTestLibrary.lib)
 endif ()
 #if (APPLE)
 #    target_link_libraries(AniLiberty PRIVATE dl)
