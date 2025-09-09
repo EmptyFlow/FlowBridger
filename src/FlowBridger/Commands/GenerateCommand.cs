@@ -2,6 +2,7 @@
 using FlowBridger.Models;
 using FlowBridger.Models.ConsoleCommands;
 using FlowBridger.Parsers;
+using FlowCommandLine;
 
 namespace FlowBridger.Commands {
 
@@ -64,6 +65,13 @@ namespace FlowBridger.Commands {
             }
 
             Console.WriteLine ( $"Generation is completed" );
+        }
+
+        public static IEnumerable<FlowCommandParameter> GetParameters () {
+            return [
+                FlowCommandParameter.CreateDefault(name: "schema", help: "Path and filename "),
+                FlowCommandParameter.CreateRequired("l", "languages", "List of languages which need to generate. The parameter is multiple and has the format - language:path \"language:pathinquotes\"")
+            ];
         }
 
     }

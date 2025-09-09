@@ -17,10 +17,7 @@ CommandLine.Console ()
     .AddCommand (
         "generate",
         ( GenerateFilesCommand parameters ) => GenerateCommand.Run ( parameters ),
-        "Generating source code files. The parameter is multiple and has the format - language:path \"language:pathinquotes\"",
-        [
-            FlowCommandParameter.CreateRequired("l", "languages", "List of languages which need to generate"),
-            FlowCommandParameter.CreateRequired("s", "schema", "Path and filename "),
-        ]
+        "Generating source code files.",
+        GenerateCommand.GetParameters ()
     )
     .RunCommand ();

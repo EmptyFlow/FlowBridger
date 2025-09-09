@@ -2,7 +2,7 @@
   "profiles": {
     "FlowBridger": {
       "commandName": "Project",
-      "commandLineArgs": "generate -l=Embedded.CSharp.Import:src/FlowBridgerTestLibrary Embedded.Cpp.DynamicLinking:src/CPlusPlusTest/CppTest/flowbridger -s=src/FlowBridger.UnitTests/fullspecschema.spec",
+      "commandLineArgs": "generate src/FlowBridger.UnitTests/fullspecschema.spec -l=Embedded.CSharp.Import:src/FlowBridgerTestLibrary Embedded.Cpp.DynamicLinking:src/CPlusPlusTest/CppTest/flowbridger",
       "workingDirectory": "C:/work/Repositories/FlowBridger/Repository/FlowBridger"
     }
   }
