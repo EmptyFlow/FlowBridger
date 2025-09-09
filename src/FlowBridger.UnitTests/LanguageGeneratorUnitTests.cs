@@ -161,7 +161,7 @@ public:
 #define FLOWBRIDGER_DELEGATE_CALLTYPE
 #endif
 
-FLOWBRIDGER_DELEGATE_CALLTYPE int64_t arg_argus(float_t index, wchar_t* secondParameter);
+extern "C" FLOWBRIDGER_DELEGATE_CALLTYPE int64_t arg_argus(float_t index, wchar_t* secondParameter);
 
 #endif // MYCLASSNAME_H
 """.Replace ( "\r", "" );
@@ -239,11 +239,11 @@ namespace MyCustomNamespace {
         }
 
         [UnmanagedCallersOnly ( EntryPoint = "arg_argus" )]
-        public static int Argus ( float index, nint secondParameter ) {
+        public static long Argus ( float index, nint secondParameter ) {
             return ArgusInternal(index, GetUniStringFromPointer(secondParameter));
         }
 
-        public static partial int ArgusInternal ( float index, string secondParameter );
+        public static partial long ArgusInternal ( float index, string secondParameter );
 
     }
 }
