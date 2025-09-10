@@ -45,9 +45,9 @@ function getDataType(dataType) {
         case 2:
             return 'int64_t';
         case 3:
-            return 'wchar_t*';
+            return 'const wchar_t*';
         case 4:
-            return 'char*';
+            return 'const char*';
         case 5:
             return 'float_t';
         case 6:
@@ -63,6 +63,26 @@ function getDataType(dataType) {
     return "";
 }
 
+function getDataTypeForReturn(dataType) {
+    switch (dataType) {
+        case 3:
+            return 'wchar_t*';
+        case 4:
+            return 'char*';
+        case 1:
+        case 2:
+        case 5:
+        case 6:
+        case 7:
+        case 8:
+        case 9:
+            return getDataType(dataType);
+    }
+
+    return "";
+}
+
+
 function defineParameter(parameter) {
     let name = parameter.Name.substring(1); 
     name = parameter.Name[0].toLowerCase() + name;
@@ -74,7 +94,7 @@ function defineParameter(parameter) {
 
 function defineMethod(method) {
     var parameters = method.Parameters.map(a => defineParameter(a)).join(", ");
-    var returnType = getDataType(method.ReturnType.DataType);
+    var returnType = getDataTypeForReturn(method.ReturnType.DataType);
     if (!returnType) returnType = "void";
 
     const nameInSnakeCase = convertNameToSnakeCase(method.Name);
