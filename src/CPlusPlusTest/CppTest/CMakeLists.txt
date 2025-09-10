@@ -18,6 +18,15 @@ if (WIN32)
 
     target_include_directories(CppTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/flowbridger)
     target_link_libraries(CppTest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/flowbridger/FlowBridgerTestLibrary.lib)
+    add_custom_command(
+        TARGET CppTest
+        POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            "${CMAKE_CURRENT_SOURCE_DIR}/flowbridger/FlowBridgerTestLibrary.dll"
+            $<TARGET_FILE_DIR:CppTest> # Or the specific executable target name
+        COMMAND_EXPAND_LISTS
+        COMMENT "Copying DLLs to target directory"
+    )
 endif ()
 #if (APPLE)
 #    target_link_libraries(AniLiberty PRIVATE dl)
