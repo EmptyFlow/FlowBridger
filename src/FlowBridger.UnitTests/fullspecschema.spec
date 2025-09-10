@@ -1,5 +1,14 @@
 ﻿version 1.0
 
+globaldelegate VoidDelegate
+Int32Value int32
+Int64Value int64
+
+globaldelegate Int32Delegate
+Int32Value int32
+Int64Value int64
+ReturnType int32
+
 globalmethod DigitalMethod
 Int32Value int32
 Int64Value int64
@@ -13,3 +22,8 @@ globalmethod StringMethod
 StringAnsi stringAnsi
 StringUni stringUni
 ReturnType stringAnsi
+
+globalmethod CallbackMethod
+CallbackWithVoid method
+CallbackWithoutVoid method
+ReturnType bool

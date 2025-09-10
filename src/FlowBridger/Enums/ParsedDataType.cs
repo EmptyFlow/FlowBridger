@@ -20,7 +20,9 @@
 
         UInt64,
 
-        Method
+        Method,
+
+        Boolean,
 
     };
 

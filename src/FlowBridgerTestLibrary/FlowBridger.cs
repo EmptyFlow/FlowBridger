@@ -28,6 +28,10 @@ namespace FlowBridger.Export {
             return Marshal.PtrToStringUni ( pointer ) ?? "";
         }
 
+        private delegate void VoidDelegate ( int int32Value, long int64Value );
+
+        private delegate int Int32Delegate ( int int32Value, long int64Value );
+
         [UnmanagedCallersOnly ( EntryPoint = "digital_method" )]
         public static double DigitalMethod ( int int32Value, long int64Value, float floatValue, double doubleValue, uint uint32Value, ulong uint64Value ) {
             return DigitalMethodInternal(int32Value, int64Value, floatValue, doubleValue, uint32Value, uint64Value);
@@ -41,6 +45,13 @@ namespace FlowBridger.Export {
         }
 
         public static partial string StringMethodInternal ( string stringAnsi, string stringUni );
+
+        [UnmanagedCallersOnly ( EntryPoint = "callback_method" )]
+        public static void CallbackMethod ( nint callbackWithVoid, nint callbackWithoutVoid ) {
+            CallbackMethodInternal(nint, nint);
+        }
+
+        public static partial void CallbackMethodInternal ( nint callbackWithVoid, nint callbackWithoutVoid );
 
     }
 }

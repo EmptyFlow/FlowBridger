@@ -86,29 +86,19 @@ function getDataType(dataType) {
             return 'ulong';
         case 9:
             return 'nint'; // remake on concrete method
+        case 10:
+            return 'bool';
     }
 
     return "";
 }
 
 function getInternalDataType(dataType) {
-    switch (dataType) {
-        case 1:
-        case 2:
-        case 5:
-        case 6:
-        case 7:
-        case 8:
-            return getDataType(dataType);
-        case 3:
-            return 'string';
-        case 4:
-            return 'string';
-        case 9:
-            return 'nint'; // remake on concrete method
-    }
+    if (dataType === 3) return 'string';
+    if (dataType === 4) return 'string';
+    if (dataType === 9) return 'nint'; // remake on concrete method
 
-    return "";
+    return getDataType(dataType);
 }
 
 function defineParameter(parameter) {
@@ -120,62 +110,28 @@ function defineInternalParameter(parameter) {
 }
 
 function definePassedParameter(parameter) {
-    switch (parameter.ParameterType.DataType) {
-        case 1:
-        case 2:
-        case 5:
-        case 6:
-        case 7:
-        case 8:
-            return convertNameToCamelCase(parameter.Name);
-        case 3:
-            return `GetUniStringFromPointer(${convertNameToCamelCase(parameter.Name)})`;
-        case 4:
-            return `Marshal.PtrToStringAnsi(${convertNameToCamelCase(parameter.Name)}) ?? ""`;
-        case 9:
-            return 'nint'; // remake on concrete method
-    }
+    if (parameter.ParameterType.DataType === 3) return `GetUniStringFromPointer(${convertNameToCamelCase(parameter.Name)})`;
+    if (parameter.ParameterType.DataType === 4) return `Marshal.PtrToStringAnsi(${convertNameToCamelCase(parameter.Name)}) ?? ""`;
+    if (parameter.ParameterType.DataType === 9) return 'nint'; // remake on concrete method
 
-    return "";
+    return convertNameToCamelCase(parameter.Name);
 }
 
 function defineReturnPassType(method) {
-    switch (method.ReturnType.DataType) {
-        case 1:
-        case 2:
-        case 5:
-        case 6:
-        case 7:
-        case 8:
-            return getDataType(method.ReturnType.DataType);
-        case 3:
-        case 4:
-            return `nint`;
-        case 9:
-            return 'nint'; // remake on concrete method
-    }
+    if (method.ReturnType.DataType === 0) return `void`;
+    if (method.ReturnType.DataType === 3) return `nint`;
+    if (method.ReturnType.DataType === 4) return `nint`;
+    if (method.ReturnType.DataType === 9) return 'nint'; // remake on concrete method
 
-    return "void";
+    return getDataType(method.ReturnType.DataType);
 }
 
 function defineReturnType(method) {
-    switch (method.ReturnType.DataType) {
-        case 1:
-        case 2:
-        case 5:
-        case 6:
-        case 7:
-        case 8:
-            return getDataType(method.ReturnType.DataType);
-        case 3:
-            return `string`;
-        case 4:
-            return `string`;
-        case 9:
-            return 'nint'; // remake on concrete method
-    }
+    if (method.ReturnType.DataType === 0) return `void`;
+    if (method.ReturnType.DataType === 3 || method.ReturnType.DataType === 4) return `string`;
+    if (method.ReturnType.DataType === 9) return `nint`; // remake on concrete method
 
-    return "void";
+    return getDataType(method.ReturnType.DataType);
 }
 
 function defineReturnTypeCall(method, internalCall) {
@@ -215,12 +171,24 @@ function defineMethod(method) {
 
 }
 
+function defineDelegate(method) {
+    const parameters = method.Parameters.map(a => defineParameter(a)).join(', ');
+    const returnPassType = defineReturnPassType(method);
+
+    return `
+        private delegate ${returnPassType} ${method.Name} ( ${parameters} );\n`;
+}
+
 function defineFile(schema) {
     let result = "";
     result += defineImports();
     result += defineNamespace(schema);
     result += defineClass(schema);
     result += defineLocalHelpers();
+
+    for (var globalDelegate of schema.GlobalDelegates) {
+        result += defineDelegate(globalDelegate);
+    }
 
     for (var globalMethod of schema.GlobalMethods) {
         result += defineMethod(globalMethod);

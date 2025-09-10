@@ -106,6 +106,8 @@ namespace FlowBridger.Parsers {
 
         private const string GlobalMethod = "globalmethod";
 
+        private const string GlobalDelegate = "globaldelegate";
+
         private const string GlobalOptions = "globaloption";
 
         private const string Version = "version";
@@ -118,6 +120,7 @@ namespace FlowBridger.Parsers {
             );
 
             var globalMethods = new List<MethodModel> ();
+            var globalDelegates = new List<MethodModel> ();
             var globalOptions = new Dictionary<string, string> ();
             var version = "";
 
@@ -129,7 +132,8 @@ namespace FlowBridger.Parsers {
                 }
                 var (lineName, lineValue) = ParseLine ( currentLine );
                 var lowerName = lineName.ToLowerInvariant ();
-                if ( lowerName == GlobalMethod ) globalMethods.Add ( ParseMethod ( lines, version ) );
+                if ( lowerName is GlobalMethod ) globalMethods.Add ( ParseMethod ( lines, version ) );
+                if ( lowerName is GlobalDelegate ) globalDelegates.Add ( ParseMethod ( lines, version ) );
                 if ( lowerName == GlobalOptions ) {
                     var (optionName, optionValue) = ParseGlobalOption ( lines, version );
                     globalOptions.Add ( optionName, optionValue );
@@ -145,6 +149,7 @@ namespace FlowBridger.Parsers {
                 Version = version,
                 GlobalMethods = globalMethods,
                 GlobalOptions = globalOptions,
+                GlobalDelegates = globalDelegates,
             };
         }
 

@@ -3,6 +3,7 @@ using FlowBridger.Models;
 using FlowBridger.Models.ConsoleCommands;
 using FlowBridger.Parsers;
 using FlowCommandLine;
+using Jint.Runtime;
 
 namespace FlowBridger.Commands {
 
@@ -46,6 +47,9 @@ namespace FlowBridger.Commands {
             try {
                 Console.WriteLine ( $"Generate content for languages {string.Join ( ", ", items.Keys )}" );
                 generatedFiles = LanguageGenerator.GenerateScheme ( schema, items.Keys );
+            } catch ( JavaScriptException javaScriptException ) {
+                Console.WriteLine ( javaScriptException.Message + "\n" + javaScriptException.JavaScriptStackTrace ?? "" );
+                Environment.Exit ( 1 );
             } catch ( Exception ex ) {
                 Console.WriteLine ( ex.Message );
                 Environment.Exit ( 1 );

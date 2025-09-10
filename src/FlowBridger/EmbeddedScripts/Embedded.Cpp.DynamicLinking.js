@@ -58,6 +58,8 @@ function getDataType(dataType) {
             return 'uint64_t';
         case 9:
             return 'void*'; // remake on concrete method
+        case 10:
+            return 'bool';
     }
 
     return "";
@@ -69,19 +71,9 @@ function getDataTypeForReturn(dataType) {
             return 'wchar_t*';
         case 4:
             return 'char*';
-        case 1:
-        case 2:
-        case 5:
-        case 6:
-        case 7:
-        case 8:
-        case 9:
-            return getDataType(dataType);
     }
-
-    return "";
+    return getDataType(dataType);
 }
-
 
 function defineParameter(parameter) {
     let name = parameter.Name.substring(1); 
