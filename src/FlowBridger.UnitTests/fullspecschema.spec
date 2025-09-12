@@ -24,6 +24,6 @@ StringUni stringUni
 ReturnType stringAnsi
 
 globalmethod CallbackMethod
-CallbackWithVoid method
-CallbackWithoutVoid method
-ReturnType bool
+CallbackWithVoid method-VoidDelegate
+CallbackWithoutVoid method-Int32Delegate
+ReturnType boolean

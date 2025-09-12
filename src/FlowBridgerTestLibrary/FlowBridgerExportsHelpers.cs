@@ -14,5 +14,11 @@
 
             return "-";
         }
+
+        public static partial bool CallbackMethodInternal ( VoidDelegate callbackWithVoid, Int32Delegate callbackWithoutVoid ) {
+            return false;
+        }
+
     }
+
 }

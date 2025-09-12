@@ -66,7 +66,9 @@ function defineEndFile() {
 }`;
 }
 
-function getDataType(dataType) {
+function getDataType(parameterType) {
+    const dataType = parameterType.DataType;
+
     switch (dataType) {
         case 1:
             return 'int';
@@ -93,26 +95,28 @@ function getDataType(dataType) {
     return "";
 }
 
-function getInternalDataType(dataType) {
+function getInternalDataType(parameterType) {
+    const dataType = parameterType.DataType;
+
     if (dataType === 3) return 'string';
     if (dataType === 4) return 'string';
-    if (dataType === 9) return 'nint'; // remake on concrete method
+    if (dataType === 9) return parameterType.CustomType;
 
-    return getDataType(dataType);
+    return getDataType(parameterType);
 }
 
 function defineParameter(parameter) {
-    return `${getDataType(parameter.ParameterType.DataType)} ${convertNameToCamelCase(parameter.Name)}`;
+    return `${getDataType(parameter.ParameterType)} ${convertNameToCamelCase(parameter.Name)}`;
 }
 
 function defineInternalParameter(parameter) {
-    return `${getInternalDataType(parameter.ParameterType.DataType)} ${convertNameToCamelCase(parameter.Name)}`;
+    return `${getInternalDataType(parameter.ParameterType)} ${convertNameToCamelCase(parameter.Name)}`;
 }
 
 function definePassedParameter(parameter) {
     if (parameter.ParameterType.DataType === 3) return `GetUniStringFromPointer(${convertNameToCamelCase(parameter.Name)})`;
     if (parameter.ParameterType.DataType === 4) return `Marshal.PtrToStringAnsi(${convertNameToCamelCase(parameter.Name)}) ?? ""`;
-    if (parameter.ParameterType.DataType === 9) return 'nint'; // remake on concrete method
+    if (parameter.ParameterType.DataType === 9) return `Marshal.GetDelegateForFunctionPointer<${parameter.ParameterType.CustomType}>(${convertNameToCamelCase(parameter.Name)})`;
 
     return convertNameToCamelCase(parameter.Name);
 }
@@ -123,7 +127,7 @@ function defineReturnPassType(method) {
     if (method.ReturnType.DataType === 4) return `nint`;
     if (method.ReturnType.DataType === 9) return 'nint'; // remake on concrete method
 
-    return getDataType(method.ReturnType.DataType);
+    return getDataType(method.ReturnType);
 }
 
 function defineReturnType(method) {
@@ -131,7 +135,7 @@ function defineReturnType(method) {
     if (method.ReturnType.DataType === 3 || method.ReturnType.DataType === 4) return `string`;
     if (method.ReturnType.DataType === 9) return `nint`; // remake on concrete method
 
-    return getDataType(method.ReturnType.DataType);
+    return getDataType(method.ReturnType);
 }
 
 function defineReturnTypeCall(method, internalCall) {
@@ -143,6 +147,10 @@ function defineReturnTypeCall(method, internalCall) {
     }
     if (method.ReturnType.DataType === 4) {
         openBracket = "Marshal.StringToHGlobalAnsi("
+        closeBracket = ")"
+    }
+    if (method.ReturnType.DataType === 10) {
+        openBracket = "Marshal.GetFunctionPointerForDelegate ("
         closeBracket = ")"
     }
 
@@ -176,7 +184,7 @@ function defineDelegate(method) {
     const returnPassType = defineReturnPassType(method);
 
     return `
-        private delegate ${returnPassType} ${method.Name} ( ${parameters} );\n`;
+        public delegate ${returnPassType} ${method.Name} ( ${parameters} );\n`;
 }
 
 function defineFile(schema) {

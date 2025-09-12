@@ -32,9 +32,17 @@ namespace FlowBridger.Parsers {
         public static DataTypeModel GetDataType ( string value ) {
             if ( value.Any ( a => a == '-' ) ) { // value in format: <data-type>-<container-type>
                 var spaceIndex = value.IndexOf ( "-" );
-                return new DataTypeModel ( ParseDataType ( value.Substring ( 0, spaceIndex ) ), ParseContainerDataType ( value.Substring ( spaceIndex + 1 ) ) );
+                var dataType = ParseDataType ( value.Substring ( 0, spaceIndex ) );
+                if ( dataType == ParsedDataType.Method ) {
+                    return new DataTypeModel ( ParsedDataType.Method, ParsedContainerDataType.NotContainer, value.Substring ( spaceIndex + 1 ) );
+                } else {
+                    return new DataTypeModel ( dataType, ParseContainerDataType ( value.Substring ( spaceIndex + 1 ) ), "" );
+                }
             } else { // value in format: <data-type>
-                return new DataTypeModel ( ParseDataType ( value ), ParsedContainerDataType.NotContainer );
+                var singleDataType = ParseDataType ( value );
+                if ( singleDataType == ParsedDataType.Method ) throw new Exception ( "Method type must be defined in format: <name of parameter> method-<custom name delegate>. Delegate must be defined as: globaldelegate <custom name delegate>" );
+
+                return new DataTypeModel ( singleDataType, ParsedContainerDataType.NotContainer, "" );
             }
         }
 
@@ -57,7 +65,7 @@ namespace FlowBridger.Parsers {
 
             var options = new Dictionary<string, string> ();
             var parameters = new List<MethodParameterModel> ();
-            DataTypeModel returnMethodType = new DataTypeModel ( ParsedDataType.Unknown, ParsedContainerDataType.NotContainer );
+            DataTypeModel returnMethodType = new DataTypeModel ( ParsedDataType.Unknown, ParsedContainerDataType.NotContainer, "" );
 
             while ( !lines.IsEnd () ) {
                 var currentLine = lines.GetLastLine ();
