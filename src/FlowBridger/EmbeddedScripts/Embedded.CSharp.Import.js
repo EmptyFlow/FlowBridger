@@ -149,7 +149,7 @@ function defineReturnTypeCall(method, internalCall) {
         openBracket = "Marshal.StringToHGlobalAnsi("
         closeBracket = ")"
     }
-    if (method.ReturnType.DataType === 10) {
+    if (method.ReturnType.DataType === 9) {
         openBracket = "Marshal.GetFunctionPointerForDelegate ("
         closeBracket = ")"
     }

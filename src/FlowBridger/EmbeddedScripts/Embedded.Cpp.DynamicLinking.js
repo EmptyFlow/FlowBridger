@@ -38,8 +38,8 @@ function defineEndFile() {
     return `#endif // ${upperFileName}`;
 }
 
-function getDataType(dataType) {
-    switch (dataType) {
+function getDataType(parameter) {
+    switch (parameter.DataType) {
         case 1:
             return 'int32_t';
         case 2:
@@ -65,28 +65,28 @@ function getDataType(dataType) {
     return "";
 }
 
-function getDataTypeForReturn(dataType) {
-    switch (dataType) {
+function getDataTypeForReturn(parameter) {
+    switch (parameter.DataType) {
         case 3:
             return 'wchar_t*';
         case 4:
             return 'char*';
     }
-    return getDataType(dataType);
+    return getDataType(parameter);
 }
 
 function defineParameter(parameter) {
     let name = parameter.Name.substring(1); 
     name = parameter.Name[0].toLowerCase() + name;
 
-    const dataType = getDataType(parameter.ParameterType.DataType);
+    const dataType = getDataType(parameter.ParameterType);
 
     return `${dataType} ${name}`;
 }
 
 function defineMethod(method) {
     var parameters = method.Parameters.map(a => defineParameter(a)).join(", ");
-    var returnType = getDataTypeForReturn(method.ReturnType.DataType);
+    var returnType = getDataTypeForReturn(method.ReturnType);
     if (!returnType) returnType = "void";
 
     const nameInSnakeCase = convertNameToSnakeCase(method.Name);
@@ -95,10 +95,24 @@ function defineMethod(method) {
     return `extern "C" FLOWBRIDGER_DELEGATE_CALLTYPE ${returnType} ${methodName}(${parameters});\n`;
 }
 
+function defineDelegate(delegate) {
+    var parameters = delegate.Parameters.map(a => defineParameter(a)).join(", ");
+    var returnType = getDataType(delegate.ReturnType);
+    if (!returnType) returnType = "void";
+
+    const nameInSnakeCase = convertNameToSnakeCase(delegate.Name);
+    let methodName = delegate.Options["Namespace"] ? delegate.Options["Namespace"] + "_" + nameInSnakeCase : nameInSnakeCase;
+
+    return `typedef ${returnType} (*${methodName})(${parameters});\n`;
+}
+
 function defineFile(schema) {
     let result = "";
     result += defineInclude();
     result += defineSection();
+
+    for (var globalDelegate of schema.GlobalDelegates) result += defineDelegate(globalDelegate);
+    if (schema.GlobalDelegates.length) result += '\n';
 
     for (var globalMethod of schema.GlobalMethods) {
         result += defineMethod(globalMethod);
