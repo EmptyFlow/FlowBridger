@@ -57,7 +57,7 @@ function getDataType(parameter) {
         case 8:
             return 'uint64_t';
         case 9:
-            return 'void*'; // remake on concrete method
+            return convertNameToSnakeCase(parameter.CustomType);
         case 10:
             return 'bool';
     }

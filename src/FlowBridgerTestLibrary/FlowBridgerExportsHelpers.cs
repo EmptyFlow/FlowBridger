@@ -16,7 +16,11 @@
         }
 
         public static partial bool CallbackMethodInternal ( VoidDelegate callbackWithVoid, Int32Delegate callbackWithoutVoid ) {
-            return false;
+            callbackWithVoid ( 100, 400 );
+
+            var returnInt = callbackWithoutVoid ( 1000, 232323 );
+
+            return returnInt == 10;
         }
 
     }
