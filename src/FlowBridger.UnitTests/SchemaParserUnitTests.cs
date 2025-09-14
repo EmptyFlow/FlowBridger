@@ -152,7 +152,7 @@ namespace FlowBridger.UnitTests {
             var result = SchemaParser.GetDataType ( line );
 
             //assert
-            Assert.Equal ( new DataTypeModel ( ParsedDataType.Unknown, ParsedContainerDataType.NotContainer ), result );
+            Assert.Equal ( new DataTypeModel ( ParsedDataType.Unknown, ParsedContainerDataType.NotContainer, "" ), result );
         }
 
         [Fact]
@@ -164,7 +164,7 @@ namespace FlowBridger.UnitTests {
             var result = SchemaParser.GetDataType ( line );
 
             //assert
-            Assert.Equal ( new DataTypeModel ( ParsedDataType.Int32, ParsedContainerDataType.NotContainer ), result );
+            Assert.Equal ( new DataTypeModel ( ParsedDataType.Int32, ParsedContainerDataType.NotContainer, "" ), result );
         }
 
         [Fact]
@@ -176,7 +176,7 @@ namespace FlowBridger.UnitTests {
             var result = SchemaParser.GetDataType ( line );
 
             //assert
-            Assert.Equal ( new DataTypeModel ( ParsedDataType.Int32, ParsedContainerDataType.Array ), result );
+            Assert.Equal ( new DataTypeModel ( ParsedDataType.Int32, ParsedContainerDataType.Array, "" ), result );
         }
 
         [Fact]
@@ -197,10 +197,10 @@ namespace FlowBridger.UnitTests {
             Assert.Equal ( "testMethod", result.Name );
             var firstParameter = result.Parameters.First ();
             Assert.Equal ( "parameter1", firstParameter.Name );
-            Assert.Equal ( new DataTypeModel ( ParsedDataType.Int32, ParsedContainerDataType.NotContainer ), firstParameter.ParameterType );
+            Assert.Equal ( new DataTypeModel ( ParsedDataType.Int32, ParsedContainerDataType.NotContainer, "" ), firstParameter.ParameterType );
             var secondParameter = result.Parameters.Last ();
             Assert.Equal ( "parameter2", secondParameter.Name );
-            Assert.Equal ( new DataTypeModel ( ParsedDataType.Int64, ParsedContainerDataType.NotContainer ), secondParameter.ParameterType );
+            Assert.Equal ( new DataTypeModel ( ParsedDataType.Int64, ParsedContainerDataType.NotContainer, "" ), secondParameter.ParameterType );
         }
 
         [Fact]
@@ -222,10 +222,10 @@ namespace FlowBridger.UnitTests {
             Assert.Equal ( "testMethod", result.Name );
             var firstParameter = result.Parameters.First ();
             Assert.Equal ( "parameter1", firstParameter.Name );
-            Assert.Equal ( new DataTypeModel ( ParsedDataType.Int32, ParsedContainerDataType.NotContainer ), firstParameter.ParameterType );
+            Assert.Equal ( new DataTypeModel ( ParsedDataType.Int32, ParsedContainerDataType.NotContainer, "" ), firstParameter.ParameterType );
             var secondParameter = result.Parameters.Last ();
             Assert.Equal ( "parameter2", secondParameter.Name );
-            Assert.Equal ( new DataTypeModel ( ParsedDataType.Int64, ParsedContainerDataType.NotContainer ), secondParameter.ParameterType );
+            Assert.Equal ( new DataTypeModel ( ParsedDataType.Int64, ParsedContainerDataType.NotContainer, "" ), secondParameter.ParameterType );
 
             var option = result.Options.First ();
             Assert.Equal ( "csnamespace", option.Key );
@@ -253,10 +253,10 @@ namespace FlowBridger.UnitTests {
             Assert.Equal ( "testMethod", result.Name );
             var firstParameter = result.Parameters.First ();
             Assert.Equal ( "parameter1", firstParameter.Name );
-            Assert.Equal ( new DataTypeModel ( ParsedDataType.Int32, ParsedContainerDataType.NotContainer ), firstParameter.ParameterType );
+            Assert.Equal ( new DataTypeModel ( ParsedDataType.Int32, ParsedContainerDataType.NotContainer, "" ), firstParameter.ParameterType );
             var secondParameter = result.Parameters.Last ();
             Assert.Equal ( "parameter2", secondParameter.Name );
-            Assert.Equal ( new DataTypeModel ( ParsedDataType.Int64, ParsedContainerDataType.NotContainer ), secondParameter.ParameterType );
+            Assert.Equal ( new DataTypeModel ( ParsedDataType.Int64, ParsedContainerDataType.NotContainer, "" ), secondParameter.ParameterType );
 
             var option = result.Options.First ();
             Assert.Equal ( "csnamespace", option.Key );
@@ -278,6 +278,40 @@ namespace FlowBridger.UnitTests {
             //assert
             Assert.Equal ( "option", result.name );
             Assert.Equal ( "value", result.value );
+        }
+
+        [Fact]
+        public void ParseGlobalOptions_Completed_Case2 () {
+            //arrange
+            var lines = new DefaultSchemaLines (
+                new List<string> {
+                    "globaloption"
+                }
+            );
+
+            //act
+            var result = SchemaParser.ParseGlobalOption ( lines, "1.0" );
+
+            //assert
+            Assert.Empty ( result.name );
+            Assert.Empty ( result.value );
+        }
+
+        [Fact]
+        public void ParseGlobalOptions_Completed_Case3 () {
+            //arrange
+            var lines = new DefaultSchemaLines (
+                new List<string> {
+                    "globaloption "
+                }
+            );
+
+            //act
+            var result = SchemaParser.ParseGlobalOption ( lines, "1.0" );
+
+            //assert
+            Assert.Empty ( result.name );
+            Assert.Empty ( result.value );
         }
 
         [Fact]
@@ -309,18 +343,18 @@ parameter4 int64
             Assert.Equal ( "testMethod", firstGlobalMethod.Name );
             var firstParameter = firstGlobalMethod.Parameters.First ();
             Assert.Equal ( "parameter1", firstParameter.Name );
-            Assert.Equal ( new DataTypeModel ( ParsedDataType.Int32, ParsedContainerDataType.NotContainer ), firstParameter.ParameterType );
+            Assert.Equal ( new DataTypeModel ( ParsedDataType.Int32, ParsedContainerDataType.NotContainer, "" ), firstParameter.ParameterType );
             var secondParameter = firstGlobalMethod.Parameters.Last ();
             Assert.Equal ( "parameter2", secondParameter.Name );
-            Assert.Equal ( new DataTypeModel ( ParsedDataType.Int64, ParsedContainerDataType.NotContainer ), secondParameter.ParameterType );
+            Assert.Equal ( new DataTypeModel ( ParsedDataType.Int64, ParsedContainerDataType.NotContainer, "" ), secondParameter.ParameterType );
 
             Assert.Equal ( "test2Method", secondGlobalMethod.Name );
             var firstSecondParameter = secondGlobalMethod.Parameters.First ();
             Assert.Equal ( "parameter3", firstSecondParameter.Name );
-            Assert.Equal ( new DataTypeModel ( ParsedDataType.Int32, ParsedContainerDataType.NotContainer ), firstSecondParameter.ParameterType );
+            Assert.Equal ( new DataTypeModel ( ParsedDataType.Int32, ParsedContainerDataType.NotContainer, "" ), firstSecondParameter.ParameterType );
             var secondSecondParameter = secondGlobalMethod.Parameters.Last ();
             Assert.Equal ( "parameter4", secondSecondParameter.Name );
-            Assert.Equal ( new DataTypeModel ( ParsedDataType.Int64, ParsedContainerDataType.NotContainer ), secondSecondParameter.ParameterType );
+            Assert.Equal ( new DataTypeModel ( ParsedDataType.Int64, ParsedContainerDataType.NotContainer, "" ), secondSecondParameter.ParameterType );
         }
 
     }

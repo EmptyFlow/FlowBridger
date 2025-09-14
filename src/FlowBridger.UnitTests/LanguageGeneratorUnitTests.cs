@@ -20,16 +20,17 @@ namespace FlowBridger.UnitTests {
                         Parameters = new List<MethodParameterModel> {
                             new MethodParameterModel {
                                 Name = "Index",
-                                ParameterType = new DataTypeModel(ParsedDataType.Float, ParsedContainerDataType.NotContainer)
+                                ParameterType = new DataTypeModel(ParsedDataType.Float, ParsedContainerDataType.NotContainer, "")
                             },
                             new MethodParameterModel {
                                 Name = "SecondParameter",
-                                ParameterType = new DataTypeModel(ParsedDataType.StringUni, ParsedContainerDataType.NotContainer)
+                                ParameterType = new DataTypeModel(ParsedDataType.StringUni, ParsedContainerDataType.NotContainer, "")
                             }
                         },
-                        ReturnType = new DataTypeModel(ParsedDataType.Int64, ParsedContainerDataType.NotContainer),
+                        ReturnType = new DataTypeModel(ParsedDataType.Int64, ParsedContainerDataType.NotContainer, ""),
                     }
                 ],
+                GlobalDelegates = new List<MethodModel>(),
                 GlobalOptions = new Dictionary<string, string> {
                     ["CppFileName"] = "myclassname.h"
                 }
@@ -63,7 +64,7 @@ namespace FlowBridger.UnitTests {
 #define FLOWBRIDGER_DELEGATE_CALLTYPE
 #endif
 
-typedef int64_t (FLOWBRIDGER_DELEGATE_CALLTYPE *argus)(float_t index, wchar_t* secondParameter);
+typedef int64_t (FLOWBRIDGER_DELEGATE_CALLTYPE *arg_argus)(float_t index, const wchar_t* secondParameter);
 
 class ImportFunctions {
 private:
@@ -97,10 +98,10 @@ public:
     ImportFunctions(const std::wstring& pathToLibrary) {
         void *lib = loadLibrary(pathToLibrary);
 
-        argusmethod = (argus)getExport(lib, "arg_argus");
+        argus = (argus)getExport(lib, "arg_argus");
     }
 
-    argus argusmethod = nullptr;
+    argus argus = nullptr;
 };
 
 #endif // MYCLASSNAME_H
@@ -123,16 +124,17 @@ public:
                         Parameters = new List<MethodParameterModel> {
                             new MethodParameterModel {
                                 Name = "Index",
-                                ParameterType = new DataTypeModel(ParsedDataType.Float, ParsedContainerDataType.NotContainer)
+                                ParameterType = new DataTypeModel(ParsedDataType.Float, ParsedContainerDataType.NotContainer, "")
                             },
                             new MethodParameterModel {
                                 Name = "SecondParameter",
-                                ParameterType = new DataTypeModel(ParsedDataType.StringUni, ParsedContainerDataType.NotContainer)
+                                ParameterType = new DataTypeModel(ParsedDataType.StringUni, ParsedContainerDataType.NotContainer, "")
                             }
                         },
-                        ReturnType = new DataTypeModel(ParsedDataType.Int64, ParsedContainerDataType.NotContainer),
+                        ReturnType = new DataTypeModel(ParsedDataType.Int64, ParsedContainerDataType.NotContainer, ""),
                     }
                 ],
+                GlobalDelegates = new List<MethodModel> (),
                 GlobalOptions = new Dictionary<string, string> {
                     ["CppFileName"] = "myclassname.h"
                 }
@@ -161,7 +163,7 @@ public:
 #define FLOWBRIDGER_DELEGATE_CALLTYPE
 #endif
 
-extern "C" FLOWBRIDGER_DELEGATE_CALLTYPE int64_t arg_argus(float_t index, wchar_t* secondParameter);
+extern "C" FLOWBRIDGER_DELEGATE_CALLTYPE int64_t arg_argus(float_t index, const wchar_t* secondParameter);
 
 #endif // MYCLASSNAME_H
 """.Replace ( "\r", "" );
@@ -183,16 +185,17 @@ extern "C" FLOWBRIDGER_DELEGATE_CALLTYPE int64_t arg_argus(float_t index, wchar_
                         Parameters = new List<MethodParameterModel> {
                             new MethodParameterModel {
                                 Name = "Index",
-                                ParameterType = new DataTypeModel(ParsedDataType.Float, ParsedContainerDataType.NotContainer)
+                                ParameterType = new DataTypeModel(ParsedDataType.Float, ParsedContainerDataType.NotContainer, "")
                             },
                             new MethodParameterModel {
                                 Name = "SecondParameter",
-                                ParameterType = new DataTypeModel(ParsedDataType.StringUni, ParsedContainerDataType.NotContainer)
+                                ParameterType = new DataTypeModel(ParsedDataType.StringUni, ParsedContainerDataType.NotContainer, "")
                             }
                         },
-                        ReturnType = new DataTypeModel(ParsedDataType.Int64, ParsedContainerDataType.NotContainer),
+                        ReturnType = new DataTypeModel(ParsedDataType.Int64, ParsedContainerDataType.NotContainer, ""),
                     }
                 ],
+                GlobalDelegates = new List<MethodModel> (),
                 GlobalOptions = new Dictionary<string, string> {
                     ["CsFileName"] = "MyClass.cs",
                     ["CsNameSpace"] = "MyCustomNamespace",

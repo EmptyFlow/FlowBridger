@@ -1,7 +1,6 @@
 ﻿version 1.0
 
 # delegates
-
 globaldelegate VoidDelegate
 Int32Value int32
 Int64Value int64

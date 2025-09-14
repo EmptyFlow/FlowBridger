@@ -52,13 +52,13 @@ function defineClassConstructorInitialization(method) {
     const nameInSnakeCase = convertNameToSnakeCase(method.Name);
     const originalMethodName = method.Options["Namespace"] ? method.Options["Namespace"] + "_" + nameInSnakeCase : nameInSnakeCase;
 
-    return `        ${methodName}method = (${nameInSnakeCase})getExport(lib, "${originalMethodName}");`;
+    return `        ${methodName} = (${nameInSnakeCase})getExport(lib, "${originalMethodName}");`;
 }
 
 function defineClassMethod(method) {
     const methodName = redefineName(method.Name);
     const nameInSnakeCase = convertNameToSnakeCase(method.Name);
-    return `    ${nameInSnakeCase} ${methodName}method = nullptr;`;
+    return `    ${nameInSnakeCase} ${methodName} = nullptr;`;
 }
 
 function defineClassGlobalMethods(methods) {

@@ -56,14 +56,14 @@ public:
     ImportFunctions(const std::wstring& pathToLibrary) {
         void *lib = loadLibrary(pathToLibrary);
 
-        digitalMethodmethod = (digital_method)getExport(lib, "digital_method");
-        stringMethodmethod = (string_method)getExport(lib, "string_method");
-        callbackMethodmethod = (callback_method)getExport(lib, "callback_method");
+        digitalMethod = (digital_method)getExport(lib, "digital_method");
+        stringMethod = (string_method)getExport(lib, "string_method");
+        callbackMethod = (callback_method)getExport(lib, "callback_method");
     }
 
-    digital_method digitalMethodmethod = nullptr;
-    string_method stringMethodmethod = nullptr;
-    callback_method callbackMethodmethod = nullptr;
+    digital_method digitalMethod = nullptr;
+    string_method stringMethod = nullptr;
+    callback_method callbackMethod = nullptr;
 };
 
 #endif // FLOW_BRIDGER_H_

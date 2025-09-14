@@ -144,7 +144,7 @@ namespace FlowBridger.Parsers {
                 if ( lowerName is GlobalDelegate ) globalDelegates.Add ( ParseMethod ( lines, version ) );
                 if ( lowerName == GlobalOptions ) {
                     var (optionName, optionValue) = ParseGlobalOption ( lines, version );
-                    globalOptions.Add ( optionName, optionValue );
+                    if ( !string.IsNullOrEmpty ( optionName ) ) globalOptions.Add ( optionName, optionValue );
                 }
                 if ( lowerName == Version && string.IsNullOrEmpty ( version ) ) {
                     version = lineValue;
