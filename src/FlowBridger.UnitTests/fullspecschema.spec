@@ -1,5 +1,7 @@
 ﻿version 1.0
 
+# delegates
+
 globaldelegate VoidDelegate
 Int32Value int32
 Int64Value int64
@@ -8,6 +10,8 @@ globaldelegate Int32Delegate
 Int32Value int32
 Int64Value int64
 returnType int32
+
+# methods
 
 globalmethod DigitalMethod
 Int32Value int32

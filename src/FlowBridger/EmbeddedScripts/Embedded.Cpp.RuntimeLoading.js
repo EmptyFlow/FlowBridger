@@ -52,12 +52,13 @@ function defineClassConstructorInitialization(method) {
     const nameInSnakeCase = convertNameToSnakeCase(method.Name);
     const originalMethodName = method.Options["Namespace"] ? method.Options["Namespace"] + "_" + nameInSnakeCase : nameInSnakeCase;
 
-    return `${methodName}method = (${methodName})getExport(lib, "${originalMethodName}");`;
+    return `        ${methodName}method = (${nameInSnakeCase})getExport(lib, "${originalMethodName}");`;
 }
 
 function defineClassMethod(method) {
     const methodName = redefineName(method.Name);
-    return `${methodName} ${methodName}method = nullptr;`;
+    const nameInSnakeCase = convertNameToSnakeCase(method.Name);
+    return `    ${nameInSnakeCase} ${methodName}method = nullptr;`;
 }
 
 function defineClassGlobalMethods(methods) {
@@ -96,24 +97,24 @@ public:
     ImportFunctions(const std::wstring& pathToLibrary) {
         void *lib = loadLibrary(pathToLibrary);
 
-        ${constructorInitialization}
+${constructorInitialization}
     }
 
-    ${filteredMethods}
+${filteredMethods}
 };\n
 `;
 }
 
-function getDataType(dataType) {
-    switch (dataType) {
+function getDataType(parameter) {
+    switch (parameter.DataType) {
         case 1:
             return 'int32_t';
         case 2:
             return 'int64_t';
         case 3:
-            return 'wchar_t*';
+            return 'const wchar_t*';
         case 4:
-            return 'char*';
+            return 'const char*';
         case 5:
             return 'float_t';
         case 6:
@@ -123,35 +124,62 @@ function getDataType(dataType) {
         case 8:
             return 'uint64_t';
         case 9:
-            return 'void*'; // remake on concrete method
+            return convertNameToSnakeCase(parameter.CustomType);
+        case 10:
+            return 'bool';
     }
 
     return "";
+}
+
+function getDataTypeForReturn(parameter) {
+    switch (parameter.DataType) {
+        case 3:
+            return 'wchar_t*';
+        case 4:
+            return 'char*';
+    }
+    return getDataType(parameter);
 }
 
 function defineParameter(parameter) {
     let name = parameter.Name.substring(1);
     name = parameter.Name[0].toLowerCase() + name;
 
-    const dataType = getDataType(parameter.ParameterType.DataType);
+    const dataType = getDataType(parameter.ParameterType);
 
     return `${dataType} ${name}`;
 }
 
 function defineMethod(method) {
     var parameters = method.Parameters.map(a => defineParameter(a)).join(", ");
-    var returnType = getDataType(method.ReturnType.DataType);
+    var returnType = getDataTypeForReturn(method.ReturnType);
     if (!returnType) returnType = "void";
 
-    let methodName = redefineName(method.Name);
+    const nameInSnakeCase = convertNameToSnakeCase(method.Name);
+    const methodName = method.Options["Namespace"] ? method.Options["Namespace"] + "_" + nameInSnakeCase : nameInSnakeCase;
 
     return `typedef ${returnType} (FLOWBRIDGER_DELEGATE_CALLTYPE *${methodName})(${parameters});\n`;
+}
+
+function defineDelegate(delegate) {
+    var parameters = delegate.Parameters.map(a => defineParameter(a)).join(", ");
+    var returnType = getDataType(delegate.ReturnType);
+    if (!returnType) returnType = "void";
+
+    const nameInSnakeCase = convertNameToSnakeCase(delegate.Name);
+    let methodName = delegate.Options["Namespace"] ? delegate.Options["Namespace"] + "_" + nameInSnakeCase : nameInSnakeCase;
+
+    return `typedef ${returnType} (*${methodName})(${parameters});\n`;
 }
 
 function defineFile(schema) {
     let result = "";
     result += defineInclude();
     result += defineSection();
+
+    for (var globalDelegate of schema.GlobalDelegates) result += defineDelegate(globalDelegate);
+    if (schema.GlobalDelegates.length) result += '\n';
 
     for (var globalMethod of schema.GlobalMethods) {
         result += defineMethod(globalMethod);

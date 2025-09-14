@@ -134,7 +134,7 @@ namespace FlowBridger.Parsers {
 
             while ( !lines.IsEndScheme () ) {
                 var currentLine = lines.GetLastLine ();
-                if ( string.IsNullOrWhiteSpace ( currentLine ) ) {
+                if ( string.IsNullOrWhiteSpace ( currentLine ) || currentLine.Trim ().StartsWith ( '#' ) ) { // if line empty or it is comment
                     lines.TakeNextLine ();
                     continue;
                 }
