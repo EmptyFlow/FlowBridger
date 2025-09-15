@@ -1,0 +1,114 @@
+name: CI and Release
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  macos64:
+    runs-on: macos-latest    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Install .NET Core
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 9.0.x
+
+    - name: Restore dependencies
+      run: dotnet restore src/FlowBridger/FlowBridger.csproj
+    - name: Publish x64 application
+      run: dotnet publish -r osx-x64 -c Release --self-contained true src/FlowBridger/FlowBridger.csproj
+    - name: Publish arm64 application
+      run: dotnet publish -r osx-arm64 -c Release --self-contained true src/FlowBridger/FlowBridger.csproj
+    - name: Upload x64 artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: dist-macos64
+        path: macos64
+    - name: Upload arm64 artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: dist-macosarm64
+        path: macosarm64
+       
+  windows64:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Install .NET Core
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 9.0.x
+
+    - name: Restore dependencies
+      run: dotnet restore src/FlowBridger/FlowBridger.csproj
+    - name: Publish x64 application
+      run: dotnet publish -r win-x64 -c Release --self-contained true src/FlowBridger/FlowBridger.csproj
+    - name: Publish arm64 application
+      run: dotnet publish -r win-arm64 -c Release --self-contained true src/FlowBridger/FlowBridger.csproj
+    - name: Upload x64 artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: dist-windows64
+        path: windows64.exe
+    - name: Upload arm64 artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: dist-windowsarm64
+        path: windowsarm64.exe
+        
+  linux64:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Install .NET Core
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 9.0.x
+
+    - name: Restore dependencies
+      run: dotnet restore src/FlowBridger/FlowBridger.csproj
+    - name: Publish x64 application
+      run: dotnet publish -r linux-x64 -c Release --self-contained true src/FlowBridger/FlowBridger.csproj
+    - uses: actions/upload-artifact@v4
+      with:
+        name: dist-linux64
+        path: linux64
+
+  linuxarm64:
+    runs-on: ubuntu-24.04-arm
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Install .NET Core
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 9.0.x
+
+    - name: Restore dependencies
+      run: dotnet restore src/FlowBridger/FlowBridger.csproj
+    - name: Publish arm x64 application
+      run: dotnet publish -r linux-arm64 -c Release --self-contained true src/FlowBridger/FlowBridger.csproj
+    - uses: actions/upload-artifact@v4
+      with:
+        name: dist-linuxarm64
+        path: linuxarm64
+        
+  merge:
+    runs-on: ubuntu-latest
+    needs:
+      - linux64
+      - macos64
+      - windows64
+      - linuxarm64
+    steps:
+      - name: Merge Artifacts
+        uses: actions/upload-artifact/merge@v4
+        with:
+          name: alldistributions
