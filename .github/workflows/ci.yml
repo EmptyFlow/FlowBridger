@@ -21,6 +21,10 @@ jobs:
       run: dotnet publish -r osx-x64 -c Release --self-contained true src/FlowBridger/FlowBridger.csproj
     - name: Publish arm64 application
       run: dotnet publish -r osx-arm64 -c Release --self-contained true src/FlowBridger/FlowBridger.csproj
+    - name: Rename binaries
+      run: |
+        cp src/FlowBridger/bin/Release/net9.0/osx-x64/publish/FlowBridger macos64
+        cp src/FlowBridger/bin/Release/net9.0/osx-arm64/publish/FlowBridger macosarm64      
     - name: Upload x64 artifacts
       uses: actions/upload-artifact@v4
       with:
@@ -49,6 +53,10 @@ jobs:
       run: dotnet publish -r win-x64 -c Release --self-contained true src/FlowBridger/FlowBridger.csproj
     - name: Publish arm64 application
       run: dotnet publish -r win-arm64 -c Release --self-contained true src/FlowBridger/FlowBridger.csproj
+    - name: Rename binaries
+      run: |
+        Copy-Item -Path "src/FlowBridger/bin/Release/net9.0/win-x64/publish/FlowBridger.exe" -Destination "windows64.exe"
+        Copy-Item -Path "src/FlowBridger/bin/Release/net9.0/win-arm64/publish/FlowBridger.exe" -Destination "windowsarm64.exe"
     - name: Upload x64 artifacts
       uses: actions/upload-artifact@v4
       with:
@@ -75,6 +83,9 @@ jobs:
       run: dotnet restore src/FlowBridger/FlowBridger.csproj
     - name: Publish x64 application
       run: dotnet publish -r linux-x64 -c Release --self-contained true src/FlowBridger/FlowBridger.csproj
+    - name: Rename binaries
+      run: |
+        cp src/FlowBridger/bin/Release/net9.0/linux-x64/publish/FlowBridger linux64
     - uses: actions/upload-artifact@v4
       with:
         name: dist-linux64
@@ -95,6 +106,9 @@ jobs:
       run: dotnet restore src/FlowBridger/FlowBridger.csproj
     - name: Publish arm x64 application
       run: dotnet publish -r linux-arm64 -c Release --self-contained true src/FlowBridger/FlowBridger.csproj
+    - name: Rename binaries
+      run: |
+        cp src/FlowBridger/bin/Release/net9.0/linux-arm64/publish/FlowBridger linuxarm64      
     - uses: actions/upload-artifact@v4
       with:
         name: dist-linuxarm64
