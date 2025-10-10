@@ -357,6 +357,60 @@ parameter4 int64
             Assert.Equal ( new DataTypeModel ( ParsedDataType.Int64, ParsedContainerDataType.NotContainer, "" ), secondSecondParameter.ParameterType );
         }
 
+
+        [Fact]
+        public void ParseSchema_Completed_ManySpace () {
+            //arrange
+            var content =
+"""
+
+
+version 1.0
+
+
+
+
+globalmethod testMethod
+parameter1 int32
+parameter2 int64
+
+
+
+
+
+
+globalmethod test2Method
+parameter3 int32
+parameter4 int64
+""";
+
+            //act
+            var result = SchemaParser.ParseSchema ( content );
+
+            //assert
+            Assert.Equal ( "1.0", result.Version );
+            Assert.Equal ( 2, result.GlobalMethods.Count () );
+
+            var firstGlobalMethod = result.GlobalMethods.First ();
+            var secondGlobalMethod = result.GlobalMethods.Last ();
+
+            Assert.Equal ( "testMethod", firstGlobalMethod.Name );
+            var firstParameter = firstGlobalMethod.Parameters.First ();
+            Assert.Equal ( "parameter1", firstParameter.Name );
+            Assert.Equal ( new DataTypeModel ( ParsedDataType.Int32, ParsedContainerDataType.NotContainer, "" ), firstParameter.ParameterType );
+            var secondParameter = firstGlobalMethod.Parameters.Last ();
+            Assert.Equal ( "parameter2", secondParameter.Name );
+            Assert.Equal ( new DataTypeModel ( ParsedDataType.Int64, ParsedContainerDataType.NotContainer, "" ), secondParameter.ParameterType );
+
+            Assert.Equal ( "test2Method", secondGlobalMethod.Name );
+            var firstSecondParameter = secondGlobalMethod.Parameters.First ();
+            Assert.Equal ( "parameter3", firstSecondParameter.Name );
+            Assert.Equal ( new DataTypeModel ( ParsedDataType.Int32, ParsedContainerDataType.NotContainer, "" ), firstSecondParameter.ParameterType );
+            var secondSecondParameter = secondGlobalMethod.Parameters.Last ();
+            Assert.Equal ( "parameter4", secondSecondParameter.Name );
+            Assert.Equal ( new DataTypeModel ( ParsedDataType.Int64, ParsedContainerDataType.NotContainer, "" ), secondSecondParameter.ParameterType );
+        }
+
     }
 
 }
