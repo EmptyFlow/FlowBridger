@@ -1,4 +1,6 @@
-﻿import { schema } from "host"
+﻿import { schemaJson } from "host"
+
+const schema = JSON.parse(schemaJson);
 
 function convertNameToSnakeCase(value) {
     return value

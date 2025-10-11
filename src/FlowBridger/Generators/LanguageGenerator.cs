@@ -1,5 +1,6 @@
 ﻿using FlowBridger.Models;
 using Jint;
+using System.Text.Json;
 
 namespace FlowBridger.Generators {
 
@@ -25,8 +26,11 @@ namespace FlowBridger.Generators {
                 }
 
                 var engine = new Engine ();
+
+                var schemaJson = JsonSerializer.Serialize ( schema, GeneratorSerializerContext.Default.SchemaModel );
+
                 engine.Modules.Add ( "host", builder => builder
-                    .ExportObject ( "schema", schema )
+                    .ExportObject ( "schemaJson", schemaJson )
                 );
                 engine.Modules.Add ( "scriptModule", script );
                 var module = engine.Modules.Import ( "scriptModule" );

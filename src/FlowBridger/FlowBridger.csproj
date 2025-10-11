@@ -34,6 +34,7 @@
 	<ItemGroup>
 		<PackageReference Include="FlowCommandLine" Version="1.0.11" />
 		<PackageReference Include="Jint" Version="4.4.1" />
+		<TrimmerRootAssembly Include="Jint" />
 	</ItemGroup>
 
 </Project>
