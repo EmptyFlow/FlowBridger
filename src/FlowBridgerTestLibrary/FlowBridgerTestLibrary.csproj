@@ -6,6 +6,7 @@
 		<Nullable>enable</Nullable>
 		<PublishAot>true</PublishAot>
 		<NativeAot>enable</NativeAot>
+		<NativeLib>Shared</NativeLib>
 		<PublishTrimmed>true</PublishTrimmed>
 		<EnableTrimAnalyzer>true</EnableTrimAnalyzer>
 	</PropertyGroup>

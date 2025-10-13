@@ -53,5 +53,12 @@ namespace FlowBridger.Export {
 
         public static partial bool CallbackMethodInternal ( VoidDelegate callbackWithVoid, Int32Delegate callbackWithoutVoid );
 
+        [UnmanagedCallersOnly ( EntryPoint = "pointer_method" )]
+        public static bool PointerMethod ( nint arrayPointer, int length ) {
+            return PointerMethodInternal(arrayPointer, length);
+        }
+
+        public static partial bool PointerMethodInternal ( nint arrayPointer, int length );
+
     }
 }

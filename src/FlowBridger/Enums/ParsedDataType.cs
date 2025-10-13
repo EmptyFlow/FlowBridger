@@ -24,6 +24,8 @@
 
         Boolean,
 
+        Pointer
+
     };
 
 }

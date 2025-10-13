@@ -22,11 +22,16 @@ Uint64Value uint64
 returnType double
 
 globalmethod StringMethod
-StringAnsi stringAnsi
-StringUni stringUni
-returnType stringAnsi
+StringAnsi stringansi
+StringUni stringuni
+returnType stringansi
 
 globalmethod CallbackMethod
 CallbackWithVoid method-VoidDelegate
 CallbackWithoutVoid method-Int32Delegate
+returnType boolean
+
+globalmethod PointerMethod
+ArrayPointer pointer
+Length int32
 returnType boolean

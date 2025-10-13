@@ -72,26 +72,28 @@ function getDataType(parameterType) {
     const dataType = parameterType.DataType;
 
     switch (dataType) {
-        case 1:
+        case 1: // Int32
             return 'int';
-        case 2:
+        case 2: // Int64
             return 'long';
-        case 3:
+        case 3: // StringUni
             return 'nint';
-        case 4:
+        case 4: // StringAnsi
             return 'nint';
-        case 5:
+        case 5: // Float
             return 'float';
-        case 6:
+        case 6: // Double
             return 'double';
-        case 7:
+        case 7: // UInt32
             return 'uint';
-        case 8:
+        case 8: // UInt64
             return 'ulong';
-        case 9:
-            return 'nint'; // remake on concrete method
-        case 10:
+        case 9: // Method
+            return 'nint';
+        case 10: // Boolean
             return 'bool';
+        case 11: // Pointer
+            return 'nint';
     }
 
     return "";

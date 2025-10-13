@@ -129,6 +129,8 @@ function getDataType(parameter) {
             return convertNameToSnakeCase(parameter.CustomType);
         case 10:
             return 'bool';
+        case 11:
+            return 'void*';
     }
 
     return "";
