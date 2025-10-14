@@ -20,17 +20,17 @@ namespace FlowBridger.UnitTests {
                         Parameters = new List<MethodParameterModel> {
                             new MethodParameterModel {
                                 Name = "Index",
-                                ParameterType = new DataTypeModel(ParsedDataType.Float, ParsedContainerDataType.NotContainer, "")
+                                ParameterType = new DataTypeModel(ParsedDataType.Float,  "")
                             },
                             new MethodParameterModel {
                                 Name = "SecondParameter",
-                                ParameterType = new DataTypeModel(ParsedDataType.StringUni, ParsedContainerDataType.NotContainer, "")
+                                ParameterType = new DataTypeModel(ParsedDataType.StringUni,  "")
                             }
                         },
-                        ReturnType = new DataTypeModel(ParsedDataType.Int64, ParsedContainerDataType.NotContainer, ""),
+                        ReturnType = new DataTypeModel(ParsedDataType.Int64,  ""),
                     }
                 ],
-                GlobalDelegates = new List<MethodModel>(),
+                GlobalDelegates = new List<MethodModel> (),
                 GlobalOptions = new Dictionary<string, string> {
                     ["CppFileName"] = "myclassname.h"
                 }
@@ -105,7 +105,7 @@ public:
 };
 
 #endif // MYCLASSNAME_H
-""".Replace("\r", "");
+""".Replace ( "\r", "" );
             Assert.Equal ( correctContent, file.Content );
             //File.WriteAllText ( "C:/work/Experiments/cpptest/CppTest/file.h", file.Content );
         }
@@ -124,14 +124,14 @@ public:
                         Parameters = new List<MethodParameterModel> {
                             new MethodParameterModel {
                                 Name = "Index",
-                                ParameterType = new DataTypeModel(ParsedDataType.Float, ParsedContainerDataType.NotContainer, "")
+                                ParameterType = new DataTypeModel(ParsedDataType.Float,  "")
                             },
                             new MethodParameterModel {
                                 Name = "SecondParameter",
-                                ParameterType = new DataTypeModel(ParsedDataType.StringUni, ParsedContainerDataType.NotContainer, "")
+                                ParameterType = new DataTypeModel(ParsedDataType.StringUni,  "")
                             }
                         },
-                        ReturnType = new DataTypeModel(ParsedDataType.Int64, ParsedContainerDataType.NotContainer, ""),
+                        ReturnType = new DataTypeModel(ParsedDataType.Int64,  ""),
                     }
                 ],
                 GlobalDelegates = new List<MethodModel> (),
@@ -185,14 +185,14 @@ extern "C" FLOWBRIDGER_DELEGATE_CALLTYPE int64_t arg_argus(float_t index, const 
                         Parameters = new List<MethodParameterModel> {
                             new MethodParameterModel {
                                 Name = "Index",
-                                ParameterType = new DataTypeModel(ParsedDataType.Float, ParsedContainerDataType.NotContainer, "")
+                                ParameterType = new DataTypeModel(ParsedDataType.Float,  "")
                             },
                             new MethodParameterModel {
                                 Name = "SecondParameter",
-                                ParameterType = new DataTypeModel(ParsedDataType.StringUni, ParsedContainerDataType.NotContainer, "")
+                                ParameterType = new DataTypeModel(ParsedDataType.StringUni,  "")
                             }
                         },
-                        ReturnType = new DataTypeModel(ParsedDataType.Int64, ParsedContainerDataType.NotContainer, ""),
+                        ReturnType = new DataTypeModel(ParsedDataType.Int64,  ""),
                     }
                 ],
                 GlobalDelegates = new List<MethodModel> (),

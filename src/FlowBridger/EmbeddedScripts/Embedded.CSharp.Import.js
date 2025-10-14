@@ -21,7 +21,7 @@ function defineImports() {
 using System.Text;\n\n`;
 }
 
-function defineLocalHelpers() {
+function defineStringUniLocalHelper() {
     return `
         private static List<byte> m_zeroBytes = [0, 0, 0, 0];
 
@@ -196,7 +196,11 @@ function defineFile(schema) {
     result += defineImports();
     result += defineNamespace(schema);
     result += defineClass(schema);
-    result += defineLocalHelpers();
+
+    // if we have stringUni type we need to generate special method helper
+    const isMethodsHaveStringUni = schema.GlobalMethods.find(a => a.Parameters.find(a => a.ParameterType.DataType === 3));
+    const isDelegatesHaveStringUni = schema.GlobalDelegates.find(a => a.Parameters.find(a => a.ParameterType.DataType === 3));
+    if (isMethodsHaveStringUni || isDelegatesHaveStringUni) result += defineStringUniLocalHelper();
 
     for (var globalDelegate of schema.GlobalDelegates) {
         result += defineDelegate(globalDelegate);

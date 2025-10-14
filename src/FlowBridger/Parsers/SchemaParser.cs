@@ -33,16 +33,12 @@ namespace FlowBridger.Parsers {
             if ( value.Any ( a => a == '-' ) ) { // value in format: <data-type>-<container-type>
                 var spaceIndex = value.IndexOf ( "-" );
                 var dataType = ParseDataType ( value.Substring ( 0, spaceIndex ) );
-                if ( dataType == ParsedDataType.Method ) {
-                    return new DataTypeModel ( ParsedDataType.Method, ParsedContainerDataType.NotContainer, value.Substring ( spaceIndex + 1 ) );
-                } else {
-                    return new DataTypeModel ( dataType, ParseContainerDataType ( value.Substring ( spaceIndex + 1 ) ), "" );
-                }
+                return new DataTypeModel ( dataType, value.Substring ( spaceIndex + 1 ) );
             } else { // value in format: <data-type>
                 var singleDataType = ParseDataType ( value );
                 if ( singleDataType == ParsedDataType.Method ) throw new Exception ( "Method type must be defined in format: <name of parameter> method-<custom name delegate>. Delegate must be defined as: globaldelegate <custom name delegate>" );
 
-                return new DataTypeModel ( singleDataType, ParsedContainerDataType.NotContainer, "" );
+                return new DataTypeModel ( singleDataType, "" );
             }
         }
 
@@ -65,7 +61,7 @@ namespace FlowBridger.Parsers {
 
             var options = new Dictionary<string, string> ();
             var parameters = new List<MethodParameterModel> ();
-            DataTypeModel returnMethodType = new DataTypeModel ( ParsedDataType.Unknown, ParsedContainerDataType.NotContainer, "" );
+            DataTypeModel returnMethodType = new DataTypeModel ( ParsedDataType.Unknown, "" );
 
             while ( !lines.IsEnd () ) {
                 var currentLine = lines.GetLastLine ();
