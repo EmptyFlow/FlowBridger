@@ -32,6 +32,8 @@ namespace FlowBridger.Export {
 
         public delegate int Int32Delegate ( int int32Value, long int64Value );
 
+        public delegate void SimpleDelegate ( int int32Value );
+
         [UnmanagedCallersOnly ( EntryPoint = "digital_method" )]
         public static double DigitalMethod ( int int32Value, long int64Value, float floatValue, double doubleValue, uint uint32Value, ulong uint64Value ) {
             return DigitalMethodInternal(int32Value, int64Value, floatValue, doubleValue, uint32Value, uint64Value);
@@ -59,6 +61,13 @@ namespace FlowBridger.Export {
         }
 
         public static partial bool PointerMethodInternal ( nint arrayPointer, int length );
+
+        [UnmanagedCallersOnly ( EntryPoint = "callback_return_method" )]
+        public static nint CallbackReturnMethod (  ) {
+            return CallbackReturnMethodInternal();
+        }
+
+        public static partial nint CallbackReturnMethodInternal (  );
 
     }
 }

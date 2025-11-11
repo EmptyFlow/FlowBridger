@@ -10,6 +10,9 @@ Int32Value int32
 Int64Value int64
 returnType int32
 
+globaldelegate SimpleDelegate
+Int32Value int32
+
 # methods
 
 globalmethod DigitalMethod
@@ -35,3 +38,6 @@ globalmethod PointerMethod
 ArrayPointer pointer
 Length int32
 returnType boolean
+
+globalmethod CallbackReturnMethod
+returnType method-SimpleDelegate

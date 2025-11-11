@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+﻿using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace FlowBridger.Export {
 
@@ -35,6 +36,23 @@ namespace FlowBridger.Export {
             }
             var expectedArray = new List<int> { 500, 3489, 126890, 565767, 984545 };
             return expectedArray.SequenceEqual ( array );
+        }
+
+        [UnmanagedCallersOnly ( CallConvs = new[] { typeof ( CallConvCdecl ) } )]
+        public static void MyManagedCallback ( int value ) {
+            Console.WriteLine ( $"Managed callback received! {value}" );
+        }
+
+        public static partial nint CallbackReturnMethodInternal () {
+            try {
+                unsafe {
+                    delegate* unmanaged[Cdecl]< int, void > fp = &MyManagedCallback;
+                    return (nint) fp;
+                }
+            } catch(Exception e) {
+                Console.WriteLine ( e.Message );
+                return 0;
+            }
         }
 
     }

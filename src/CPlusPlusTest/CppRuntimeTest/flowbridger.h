@@ -19,11 +19,13 @@
 
 typedef void (*void_delegate)(int32_t int32Value, int64_t int64Value);
 typedef int32_t (*int32_delegate)(int32_t int32Value, int64_t int64Value);
+typedef void (*simple_delegate)(int32_t int32Value);
 
 typedef double_t (FLOWBRIDGER_DELEGATE_CALLTYPE *digital_method)(int32_t int32Value, int64_t int64Value, float_t floatValue, double_t doubleValue, uint32_t uint32Value, uint64_t uint64Value);
 typedef char* (FLOWBRIDGER_DELEGATE_CALLTYPE *string_method)(const char* stringAnsi, const wchar_t* stringUni);
 typedef bool (FLOWBRIDGER_DELEGATE_CALLTYPE *callback_method)(void_delegate callbackWithVoid, int32_delegate callbackWithoutVoid);
 typedef bool (FLOWBRIDGER_DELEGATE_CALLTYPE *pointer_method)(void* arrayPointer, int32_t length);
+typedef simple_delegate (FLOWBRIDGER_DELEGATE_CALLTYPE *callback_return_method)();
 
 class ImportFunctions {
 private:
@@ -61,12 +63,14 @@ public:
         stringMethod = (string_method)getExport(lib, "string_method");
         callbackMethod = (callback_method)getExport(lib, "callback_method");
         pointerMethod = (pointer_method)getExport(lib, "pointer_method");
+        callbackReturnMethod = (callback_return_method)getExport(lib, "callback_return_method");
     }
 
     digital_method digitalMethod = nullptr;
     string_method stringMethod = nullptr;
     callback_method callbackMethod = nullptr;
     pointer_method pointerMethod = nullptr;
+    callback_return_method callbackReturnMethod = nullptr;
 };
 
 #endif // FLOW_BRIDGER_H_

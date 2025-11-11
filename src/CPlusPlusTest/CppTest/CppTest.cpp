@@ -54,6 +54,17 @@ int main()
 	auto pointerResult = pointer_method(myArrayPointer, 5);
 	cout << "pointer_method result " << (pointerResult ? "correct" : "incorrect") << endl;
 	if (!pointerResult) isHasErrors = true;
+
+	// callback_return_method Test
+	auto callBackReturnResult = callback_return_method();
+	if (!callBackReturnResult) {
+		cout << "callback_return_method result " << (callBackResult ? "correct" : "incorrect") << endl;
+		isHasErrors = true;
+	}
+	else {
+		callBackReturnResult(2);
+		cout << "callback_return_method result is correct." << endl;
+	}
 	
 	return isHasErrors ? 1 : 0;
 }

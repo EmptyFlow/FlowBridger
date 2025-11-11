@@ -9,6 +9,7 @@
 		<NativeLib>Shared</NativeLib>
 		<PublishTrimmed>true</PublishTrimmed>
 		<EnableTrimAnalyzer>true</EnableTrimAnalyzer>
+		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
 	</PropertyGroup>
 
 </Project>
