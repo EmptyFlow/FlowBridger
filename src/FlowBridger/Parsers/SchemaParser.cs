@@ -146,6 +146,8 @@ namespace FlowBridger.Parsers {
                     version = lineValue;
                     lines.TakeNextLine ();
                 }
+
+                lines.TakeNextLine ();
             }
 
 
