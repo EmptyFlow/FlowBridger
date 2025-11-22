@@ -8,6 +8,8 @@
 
         public IEnumerable<MethodModel> GlobalDelegates { get; init; } = Enumerable.Empty<MethodModel> ();
 
+        public IEnumerable<EventModel> Events { get; init; } = Enumerable.Empty<EventModel> ();
+
         public Dictionary<string, string> GlobalOptions { get; init; } = new Dictionary<string, string> ();
 
     }

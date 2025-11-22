@@ -108,11 +108,150 @@ namespace FlowBridger.Parsers {
             return (name, value);
         }
 
+        private static (IEnumerable<MethodModel> methods, IEnumerable<MethodModel> delegates, EventModel flowEvent) ParseEvent ( DefaultSchemaLines lines, string version, bool indirection, bool outdirection ) {
+            if ( version != "1.0" ) throw new BridgerParseException ( "Incorrect scheme version or version not defined. Version must be defined in line like `version 1.0`" );
+
+            var line = lines.GetLastLine ();
+            var (_, eventName) = ParseLine ( line );
+            if ( string.IsNullOrEmpty ( eventName ) ) lines.ThrowError ( "Event", $"The event must have a name in the format: `event-X <name>`" );
+
+            lines.TakeNextLine ();
+
+            var options = new Dictionary<string, string> ();
+            var parameters = new List<MethodParameterModel> ();
+
+            while ( !lines.IsEnd () ) {
+                var currentLine = lines.GetLastLine ();
+                var (optionName, optionLine) = ParseLine ( currentLine );
+                if ( optionName.StartsWith ( "#" ) ) {
+                    options.Add ( optionName.Substring ( 1 ), optionLine );
+                    lines.TakeNextLine ();
+                    continue;
+                }
+
+                parameters.Add (
+                    new MethodParameterModel {
+                        Name = optionName,
+                        ParameterType = GetDataType ( optionLine ),
+                    }
+                );
+
+                lines.TakeNextLine ();
+            }
+
+            var result = new List<MethodModel> ();
+            var delegates = new List<MethodModel> ();
+            if ( indirection ) {
+                foreach ( var parameter in parameters ) {
+                    result.Add (
+                        new MethodModel {
+                            Name = $"Event{eventName}Set{parameter.Name}",
+                            Parameters = new List<MethodParameterModel> () {
+                                new MethodParameterModel {
+                                    Name = "EventId",
+                                    ParameterType = new DataTypeModel(ParsedDataType.Int32, ""),
+                                },
+                                new MethodParameterModel {
+                                    Name = "Value",
+                                    ParameterType = parameter.ParameterType,
+                                }
+                            }
+                        }
+                    );
+                }
+                result.Add (
+                    new MethodModel {
+                        Name = $"Event{eventName}Create",
+                        Parameters = new List<MethodParameterModel> () {
+                            new MethodParameterModel {
+                                Name = "EventId",
+                                ParameterType = new DataTypeModel(ParsedDataType.Int32, ""),
+                            }
+                        }
+                    }
+                );
+                result.Add (
+                    new MethodModel {
+                        Name = $"Event{eventName}CompleteSet",
+                        Parameters = new List<MethodParameterModel> () {
+                            new MethodParameterModel {
+                                Name = "EventId",
+                                ParameterType = new DataTypeModel(ParsedDataType.Int32, ""),
+                            }
+                        }
+                    }
+                );
+            }
+            if ( outdirection ) {
+                delegates.Add (
+                    new MethodModel {
+                        Name = $"Event{eventName}Callback",
+                        Parameters = [
+                            new MethodParameterModel {
+                                Name = "EventId",
+                                ParameterType = new DataTypeModel(ParsedDataType.Int32, ""),
+                            }
+                        ]
+                    }
+                );
+                foreach ( var parameter in parameters ) {
+                    result.Add (
+                        new MethodModel {
+                            Name = $"Event{eventName}Get{parameter.Name}",
+                            Parameters = new List<MethodParameterModel> () {
+                                new MethodParameterModel {
+                                    Name = "EventId",
+                                    ParameterType = new DataTypeModel(ParsedDataType.Int32, ""),
+                                }
+                            },
+                            ReturnType = parameter.ParameterType
+                        }
+                    );
+                }
+                result.Add (
+                    new MethodModel {
+                        Name = $"Event{eventName}CallbackGet",
+                        Parameters = new List<MethodParameterModel> () {
+                            new MethodParameterModel {
+                                Name = "EventId",
+                                ParameterType = new DataTypeModel(ParsedDataType.Int32, ""),
+                            }
+                        },
+                        ReturnType = new DataTypeModel ( ParsedDataType.Method, $"Event{eventName}Callback" )
+                    }
+                );
+                result.Add (
+                    new MethodModel {
+                        Name = $"Event{eventName}CompleteGet",
+                        Parameters = new List<MethodParameterModel> () {
+                            new MethodParameterModel {
+                                Name = "EventId",
+                                ParameterType = new DataTypeModel(ParsedDataType.Int32, ""),
+                            }
+                        }
+                    }
+                );
+            }
+
+            return (
+                result,
+                delegates,
+                new EventModel {
+                    Name = eventName,
+                    Parameters = parameters,
+                    InEvent = indirection,
+                    OutEvent = outdirection,
+                }
+            );
+        }
+
         private const string GlobalMethod = "globalmethod";
 
         private const string GlobalDelegate = "globaldelegate";
 
         private const string GlobalOptions = "globaloption";
+
+        private const string EventInOut = "event-inout";
 
         private const string Version = "version";
 
@@ -125,6 +264,7 @@ namespace FlowBridger.Parsers {
 
             var globalMethods = new List<MethodModel> ();
             var globalDelegates = new List<MethodModel> ();
+            var globalEvents = new List<MethodModel> ();
             var globalOptions = new Dictionary<string, string> ();
             var version = "";
 
@@ -141,6 +281,12 @@ namespace FlowBridger.Parsers {
                 if ( lowerName == GlobalOptions ) {
                     var (optionName, optionValue) = ParseGlobalOption ( lines, version );
                     if ( !string.IsNullOrEmpty ( optionName ) ) globalOptions.Add ( optionName, optionValue );
+                }
+                if ( lowerName == EventInOut ) {
+                    var (methods, delegates, @event) = ParseEvent ( lines, version, indirection: true, outdirection: true );
+                    if ( methods.Any () ) globalMethods.AddRange ( methods );
+                    if ( delegates.Any () ) globalDelegates.AddRange ( delegates );
+                    globalEvents.Add ( @event );
                 }
                 if ( lowerName == Version && string.IsNullOrEmpty ( version ) ) {
                     version = lineValue;

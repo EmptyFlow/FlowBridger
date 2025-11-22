@@ -41,3 +41,17 @@ returnType boolean
 
 globalmethod CallbackReturnMethod
 returnType method-SimpleDelegate
+
+# events
+
+event-inout Click1
+Order int32
+Name stringansi
+
+event-in Click2
+Order int32
+Items int32-array
+
+event-out Click3
+Order int32
+Items int32-array
