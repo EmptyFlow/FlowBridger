@@ -188,35 +188,41 @@ function defineDelegate(method) {
 }
 
 function defineEventClassProperties(event) {
+    const lines = []
 
+    for (const method of event.Parameters) {
+        lines.push(`            public ${getInternalDataType(method.ParameterType)} ${method.Name} { get; set; }`);
+    }
+
+    return lines.join('\n');
 }
 
 function defineEventClass(event) {
     return `
-    public class Event${event.Name} {
+        public class Event${event.Name} {
 
-        private static int m_iterator = 0;
+            private static int m_iterator = 0;
 
-        private static ConcurrentDictionary<int, EventClick1> m_notCompletedEvents = new ConcurrentDictionary<int, EventClick1> ();
+            private static System.Collections.Concurrent.ConcurrentDictionary<int, Event${event.Name}> m_notCompletedEvents = new System.Collections.Concurrent.ConcurrentDictionary<int, Event${event.Name}> ();
 
-        ${defineEventClassProperties(event)}
+${defineEventClassProperties(event)}
 
-        public static Event${event.Name} CreateEvent () {
-            var newEvent = new Event${event.Name} ();
-            var index = Interlocked.Increment ( ref m_iterator );
-            var completed = m_notCompletedEvents.TryAdd ( index, newEvent );
-            if ( completed ) throw new Exception ( "Can't add new event to not completed list!" );
+            public static Event${event.Name} CreateEvent () {
+                var newEvent = new Event${event.Name} ();
+                var index = Interlocked.Increment ( ref m_iterator );
+                var completed = m_notCompletedEvents.TryAdd ( index, newEvent );
+                if ( completed ) throw new Exception ( "Can't add new event to not completed list!" );
 
-            return newEvent;
+                return newEvent;
+            }
+
+            public static void CompleteEvent ( int index ) {
+                if ( !m_notCompletedEvents.ContainsKey ( index ) ) return;
+
+                m_notCompletedEvents.TryRemove ( index, out var _ );
+            }
+
         }
-
-        public static void CompleteEvent ( int index ) {
-            if ( !m_notCompletedEvents.ContainsKey ( index ) ) return;
-
-            m_notCompletedEvents.TryRemove ( index, out var _ );
-        }
-
-    }
     `;
 }
 
@@ -248,8 +254,10 @@ function defineFile(schema) {
         result += defineMethod(globalMethod);
     }
 
-    var eventClasses = schema.GlobalOptions["CsEventClass"] === "enabled";
-    if (eventClasses) defineEventClasses(schema.Events);
+    if (schema.GlobalOptions["CsEventClass"]) {
+        var eventClasses = schema.GlobalOptions["CsEventClass"] === "enabled";
+        if (eventClasses) result += defineEventClasses(schema.Events);
+    }
 
     result += defineEndFile();
 

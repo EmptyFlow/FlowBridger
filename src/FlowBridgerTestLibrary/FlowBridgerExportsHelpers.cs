@@ -49,7 +49,7 @@ namespace FlowBridger.Export {
                     delegate* unmanaged[Cdecl]< int, void > fp = &MyManagedCallback;
                     return (nint) fp;
                 }
-            } catch(Exception e) {
+            } catch ( Exception e ) {
                 Console.WriteLine ( e.Message );
                 return 0;
             }
@@ -72,7 +72,7 @@ namespace FlowBridger.Export {
         }
 
         public static partial int EventClick1GetOrderInternal ( int eventId ) {
-            return 0; 
+            return 0;
         }
 
         public static partial string EventClick1GetNameInternal ( int eventId ) {

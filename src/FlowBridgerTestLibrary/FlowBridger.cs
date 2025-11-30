@@ -185,5 +185,83 @@ namespace FlowBridger.Export {
 
         public static partial void EventClick3CompleteGetInternal ( int eventId );
 
+        public class EventClick1 {
+
+            private static int m_iterator = 0;
+
+            private static System.Collections.Concurrent.ConcurrentDictionary<int, EventClick1> m_notCompletedEvents = new System.Collections.Concurrent.ConcurrentDictionary<int, EventClick1> ();
+
+            public int Order { get; set; }
+            public string Name { get; set; }
+
+            public static EventClick1 CreateEvent () {
+                var newEvent = new EventClick1 ();
+                var index = Interlocked.Increment ( ref m_iterator );
+                var completed = m_notCompletedEvents.TryAdd ( index, newEvent );
+                if ( completed ) throw new Exception ( "Can't add new event to not completed list!" );
+
+                return newEvent;
+            }
+
+            public static void CompleteEvent ( int index ) {
+                if ( !m_notCompletedEvents.ContainsKey ( index ) ) return;
+
+                m_notCompletedEvents.TryRemove ( index, out var _ );
+            }
+
+        }
+    
+        public class EventClick2 {
+
+            private static int m_iterator = 0;
+
+            private static System.Collections.Concurrent.ConcurrentDictionary<int, EventClick2> m_notCompletedEvents = new System.Collections.Concurrent.ConcurrentDictionary<int, EventClick2> ();
+
+            public int Order { get; set; }
+            public int Items { get; set; }
+
+            public static EventClick2 CreateEvent () {
+                var newEvent = new EventClick2 ();
+                var index = Interlocked.Increment ( ref m_iterator );
+                var completed = m_notCompletedEvents.TryAdd ( index, newEvent );
+                if ( completed ) throw new Exception ( "Can't add new event to not completed list!" );
+
+                return newEvent;
+            }
+
+            public static void CompleteEvent ( int index ) {
+                if ( !m_notCompletedEvents.ContainsKey ( index ) ) return;
+
+                m_notCompletedEvents.TryRemove ( index, out var _ );
+            }
+
+        }
+    
+        public class EventClick3 {
+
+            private static int m_iterator = 0;
+
+            private static System.Collections.Concurrent.ConcurrentDictionary<int, EventClick3> m_notCompletedEvents = new System.Collections.Concurrent.ConcurrentDictionary<int, EventClick3> ();
+
+            public int Order { get; set; }
+            public int Items { get; set; }
+
+            public static EventClick3 CreateEvent () {
+                var newEvent = new EventClick3 ();
+                var index = Interlocked.Increment ( ref m_iterator );
+                var completed = m_notCompletedEvents.TryAdd ( index, newEvent );
+                if ( completed ) throw new Exception ( "Can't add new event to not completed list!" );
+
+                return newEvent;
+            }
+
+            public static void CompleteEvent ( int index ) {
+                if ( !m_notCompletedEvents.ContainsKey ( index ) ) return;
+
+                m_notCompletedEvents.TryRemove ( index, out var _ );
+            }
+
+        }
+    
     }
 }
