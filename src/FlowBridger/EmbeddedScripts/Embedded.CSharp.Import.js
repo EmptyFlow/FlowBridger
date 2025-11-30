@@ -187,6 +187,48 @@ function defineDelegate(method) {
         public delegate ${returnPassType} ${method.Name} ( ${parameters} );\n`;
 }
 
+function defineEventClassProperties(event) {
+
+}
+
+function defineEventClass(event) {
+    return `
+    public class Event${event.Name} {
+
+        private static int m_iterator = 0;
+
+        private static ConcurrentDictionary<int, EventClick1> m_notCompletedEvents = new ConcurrentDictionary<int, EventClick1> ();
+
+        ${defineEventClassProperties(event)}
+
+        public static Event${event.Name} CreateEvent () {
+            var newEvent = new Event${event.Name} ();
+            var index = Interlocked.Increment ( ref m_iterator );
+            var completed = m_notCompletedEvents.TryAdd ( index, newEvent );
+            if ( completed ) throw new Exception ( "Can't add new event to not completed list!" );
+
+            return newEvent;
+        }
+
+        public static void CompleteEvent ( int index ) {
+            if ( !m_notCompletedEvents.ContainsKey ( index ) ) return;
+
+            m_notCompletedEvents.TryRemove ( index, out var _ );
+        }
+
+    }
+    `;
+}
+
+function defineEventClasses(events) {
+    let result = ``;
+    for (const event of events) {
+        result += defineEventClass(event);
+    }
+
+    return result;
+}
+
 function defineFile(schema) {
     let result = "";
     result += defineImports();
@@ -205,6 +247,9 @@ function defineFile(schema) {
     for (var globalMethod of schema.GlobalMethods) {
         result += defineMethod(globalMethod);
     }
+
+    var eventClasses = schema.GlobalOptions["CsEventClass"] === "enabled";
+    if (eventClasses) defineEventClasses(schema.Events);
 
     result += defineEndFile();
 

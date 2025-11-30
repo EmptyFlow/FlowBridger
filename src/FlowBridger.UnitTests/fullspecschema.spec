@@ -1,5 +1,7 @@
 ﻿version 1.0
 
+globaloption CsEventClass enabled
+
 # delegates
 globaldelegate VoidDelegate
 Int32Value int32

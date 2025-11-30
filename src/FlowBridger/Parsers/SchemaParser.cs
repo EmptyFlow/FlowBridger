@@ -263,7 +263,7 @@ namespace FlowBridger.Parsers {
 
             var globalMethods = new List<MethodModel> ();
             var globalDelegates = new List<MethodModel> ();
-            var globalEvents = new List<MethodModel> ();
+            var globalEvents = new List<EventModel> ();
             var globalOptions = new Dictionary<string, string> ();
             var version = "";
 
@@ -301,6 +301,7 @@ namespace FlowBridger.Parsers {
                 GlobalMethods = globalMethods,
                 GlobalOptions = globalOptions,
                 GlobalDelegates = globalDelegates,
+                Events = globalEvents
             };
         }
 
