@@ -41,6 +41,8 @@ function defineEndFile() {
 }
 
 function getDataType(parameter) {
+    if (parameter == null) return "";
+
     switch (parameter.DataType) {
         case 1:
             return 'int32_t';
@@ -70,6 +72,8 @@ function getDataType(parameter) {
 }
 
 function getDataTypeForReturn(parameter) {
+    if (!parameter) return null;
+
     switch (parameter.DataType) {
         case 3:
             return 'wchar_t*';

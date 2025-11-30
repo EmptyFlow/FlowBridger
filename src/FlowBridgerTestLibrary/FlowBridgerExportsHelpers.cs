@@ -55,6 +55,70 @@ namespace FlowBridger.Export {
             }
         }
 
+        public static partial void EventClick1SetOrderInternal ( int eventId, int value ) {
+
+        }
+
+        public static partial void EventClick1SetNameInternal ( int eventId, string value ) {
+
+        }
+
+        public static partial int EventClick1CreateInternal () {
+            return 0;
+        }
+
+        public static partial void EventClick1CompleteSetInternal ( int eventId ) {
+
+        }
+
+        public static partial int EventClick1GetOrderInternal ( int eventId ) {
+            return 0; 
+        }
+
+        public static partial string EventClick1GetNameInternal ( int eventId ) {
+            return "";
+        }
+
+        public static partial nint EventClick1CallbackGetInternal ( int eventId ) {
+            return nint.Zero;
+        }
+
+        public static partial void EventClick1CompleteGetInternal ( int eventId ) {
+
+        }
+
+        public static partial void EventClick2SetOrderInternal ( int eventId, int value ) {
+
+        }
+
+        public static partial void EventClick2SetItemsInternal ( int eventId, int value ) {
+
+        }
+
+        public static partial int EventClick2CreateInternal () {
+            return 0;
+        }
+
+        public static partial void EventClick2CompleteSetInternal ( int eventId ) {
+
+        }
+
+        public static partial int EventClick3GetOrderInternal ( int eventId ) {
+            return 0;
+        }
+
+        public static partial int EventClick3GetItemsInternal ( int eventId ) {
+            return 0;
+        }
+
+        public static partial nint EventClick3CallbackGetInternal ( int eventId ) {
+            return 0;
+        }
+
+        public static partial void EventClick3CompleteGetInternal ( int eventId ) {
+
+        }
+
     }
 
 }

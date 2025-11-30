@@ -126,7 +126,7 @@ function definePassedParameter(parameter) {
 }
 
 function defineReturnPassType(method) {
-    if (method.ReturnType.DataType === 0) return `void`;
+    if (method.ReturnType == null || method.ReturnType.DataType === 0) return `void`;
     if (method.ReturnType.DataType === 3) return `nint`;
     if (method.ReturnType.DataType === 4) return `nint`;
     if (method.ReturnType.DataType === 9) return 'nint'; // remake on concrete method
@@ -135,7 +135,7 @@ function defineReturnPassType(method) {
 }
 
 function defineReturnType(method) {
-    if (method.ReturnType.DataType === 0) return `void`;
+    if (method.ReturnType == null || method.ReturnType.DataType === 0) return `void`;
     if (method.ReturnType.DataType === 3 || method.ReturnType.DataType === 4) return `string`;
     if (method.ReturnType.DataType === 9) return `nint`; // remake on concrete method
 
@@ -166,7 +166,7 @@ function defineMethod(method) {
     const returnPassType = defineReturnPassType(method);
     const returnCsharpType = defineReturnType(method);
     const internalCall = `${method.Name}Internal(${passedParameters})`;
-    const noReturnType = method.ReturnType.DataType === 0;
+    const noReturnType = method.ReturnType == null || method.ReturnType.DataType === 0;
     const internalLine = noReturnType ? `${internalCall};` : `${defineReturnTypeCall(method, internalCall)}`;
 
     return `

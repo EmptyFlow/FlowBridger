@@ -162,12 +162,7 @@ namespace FlowBridger.Parsers {
                 result.Add (
                     new MethodModel {
                         Name = $"Event{eventName}Create",
-                        Parameters = new List<MethodParameterModel> () {
-                            new MethodParameterModel {
-                                Name = "EventId",
-                                ParameterType = new DataTypeModel(ParsedDataType.Int32, ""),
-                            }
-                        }
+                        ReturnType = new DataTypeModel ( ParsedDataType.Int32, "" )
                     }
                 );
                 result.Add (
@@ -253,6 +248,10 @@ namespace FlowBridger.Parsers {
 
         private const string EventInOut = "event-inout";
 
+        private const string EventIn = "event-in";
+
+        private const string EventOut = "event-out";
+
         private const string Version = "version";
 
         public static SchemaModel ParseSchema ( string content ) {
@@ -282,8 +281,8 @@ namespace FlowBridger.Parsers {
                     var (optionName, optionValue) = ParseGlobalOption ( lines, version );
                     if ( !string.IsNullOrEmpty ( optionName ) ) globalOptions.Add ( optionName, optionValue );
                 }
-                if ( lowerName == EventInOut ) {
-                    var (methods, delegates, @event) = ParseEvent ( lines, version, indirection: true, outdirection: true );
+                if ( lowerName is EventInOut or EventIn or EventOut ) {
+                    var (methods, delegates, @event) = ParseEvent ( lines, version, indirection: lowerName.Contains ( "in" ), outdirection: lowerName.Contains ( "out" ) );
                     if ( methods.Any () ) globalMethods.AddRange ( methods );
                     if ( delegates.Any () ) globalDelegates.AddRange ( delegates );
                     globalEvents.Add ( @event );
