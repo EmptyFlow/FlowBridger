@@ -6,6 +6,20 @@ namespace FlowBridger.Parsers {
 
     internal static class SchemaParser {
 
+        private const string GlobalMethod = "globalmethod";
+
+        private const string GlobalDelegate = "globaldelegate";
+
+        private const string GlobalOptions = "globaloption";
+
+        private const string EventInOut = "event-inout";
+
+        private const string EventIn = "event-in";
+
+        private const string EventOut = "event-out";
+
+        private const string Version = "version";
+
         public static (string name, string value) ParseLine ( string line ) {
             var firstSpaceIndex = line.IndexOf ( ' ' );
             if ( firstSpaceIndex == -1 ) return (line, "");
@@ -231,20 +245,6 @@ namespace FlowBridger.Parsers {
                 }
             );
         }
-
-        private const string GlobalMethod = "globalmethod";
-
-        private const string GlobalDelegate = "globaldelegate";
-
-        private const string GlobalOptions = "globaloption";
-
-        private const string EventInOut = "event-inout";
-
-        private const string EventIn = "event-in";
-
-        private const string EventOut = "event-out";
-
-        private const string Version = "version";
 
         public static SchemaModel ParseSchema ( string content ) {
             var lines = new DefaultSchemaLines (

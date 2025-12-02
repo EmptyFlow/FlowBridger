@@ -185,8 +185,8 @@ namespace FlowBridger.UnitTests {
             var lines = new DefaultSchemaLines (
                 new List<string> {
                     "globalmethod testMethod",
-                    "parameter1 int32",
-                    "parameter2 int64"
+                    "int32 parameter1",
+                    "int64 parameter2"
                 }
             );
 
@@ -210,8 +210,8 @@ namespace FlowBridger.UnitTests {
                 new List<string> {
                     "globalmethod testMethod",
                     "#csnamespace LALALA",
-                    "parameter1 int32",
-                    "parameter2 int64"
+                    "int32 parameter1",
+                    "int64 parameter2"
                 }
             );
 
@@ -238,9 +238,9 @@ namespace FlowBridger.UnitTests {
             var lines = new DefaultSchemaLines (
                 new List<string> {
                     "globalmethod testMethod",
-                    "parameter1 int32",
+                    "int32 parameter1",
                     "#csnamespace LALALA",
-                    "parameter2 int64",
+                    "int64 parameter2",
                     "",
                     "globalmethod lalala"
                 }
@@ -322,12 +322,12 @@ namespace FlowBridger.UnitTests {
 version 1.0
 
 globalmethod testMethod
-parameter1 int32
-parameter2 int64
+int32 parameter1
+int64 parameter2
 
 globalmethod test2Method
-parameter3 int32
-parameter4 int64
+int32 parameter3
+int64 parameter4
 """;
 
             //act
@@ -371,8 +371,8 @@ version 1.0
 
 
 globalmethod testMethod
-parameter1 int32
-parameter2 int64
+int32 parameter1
+int64 parameter2
 
 
 
@@ -380,8 +380,8 @@ parameter2 int64
 
 
 globalmethod test2Method
-parameter3 int32
-parameter4 int64
+int32 parameter3
+int64 parameter4
 """;
 
             //act
