@@ -267,21 +267,30 @@ namespace FlowBridger.Parsers {
                 }
                 var (lineName, lineValue) = ParseLine ( currentLine );
                 var lowerName = lineName.ToLowerInvariant ();
-                if ( lowerName is GlobalMethod ) globalMethods.Add ( ParseMethod ( lines, version ) );
-                if ( lowerName is GlobalDelegate ) globalDelegates.Add ( ParseMethod ( lines, version ) );
+                if ( lowerName is GlobalMethod ) {
+                    globalMethods.Add ( ParseMethod ( lines, version ) );
+                    continue;
+                }
+                if ( lowerName is GlobalDelegate ) {
+                    globalDelegates.Add ( ParseMethod ( lines, version ) );
+                    continue;
+                }
                 if ( lowerName == GlobalOptions ) {
                     var (optionName, optionValue) = ParseGlobalOption ( lines, version );
                     if ( !string.IsNullOrEmpty ( optionName ) ) globalOptions.Add ( optionName, optionValue );
+                    continue;
                 }
                 if ( lowerName is EventInOut or EventIn or EventOut ) {
                     var (methods, delegates, @event) = ParseEvent ( lines, version, indirection: lowerName.Contains ( "in" ), outdirection: lowerName.Contains ( "out" ) );
                     if ( methods.Any () ) globalMethods.AddRange ( methods );
                     if ( delegates.Any () ) globalDelegates.AddRange ( delegates );
                     globalEvents.Add ( @event );
+                    continue;
                 }
                 if ( lowerName == Version && string.IsNullOrEmpty ( version ) ) {
                     version = lineValue;
                     lines.TakeNextLine ();
+                    continue;
                 }
 
                 lines.TakeNextLine ();
