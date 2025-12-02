@@ -49,14 +49,6 @@ namespace FlowBridger.Parsers {
             var (methodLineName, methodName) = ParseLine ( line );
             if ( string.IsNullOrEmpty ( methodName ) ) lines.ThrowError ( "Global Method", $"The method must have a name in the format: `method <name>`" );
 
-            var methodReturnType = ParsedDataType.Unknown;
-            if ( methodName.Contains ( "-" ) ) { // method have return type
-                var returnIndex = methodName.IndexOf ( " " );
-                var returnType = methodName.Substring ( returnIndex );
-                methodName = methodName.Substring ( 0, returnIndex );
-                methodReturnType = ParseDataType ( returnType );
-            }
-
             lines.TakeNextLine ();
 
             var options = new Dictionary<string, string> ();
@@ -80,8 +72,8 @@ namespace FlowBridger.Parsers {
 
                 parameters.Add (
                     new MethodParameterModel {
-                        Name = optionName,
-                        ParameterType = GetDataType ( optionLine ),
+                        Name = optionLine,
+                        ParameterType = GetDataType ( optionName ),
                     }
                 );
 
@@ -131,8 +123,8 @@ namespace FlowBridger.Parsers {
 
                 parameters.Add (
                     new MethodParameterModel {
-                        Name = optionName,
-                        ParameterType = GetDataType ( optionLine ),
+                        Name = optionLine,
+                        ParameterType = GetDataType ( optionName ),
                     }
                 );
 
