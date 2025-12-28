@@ -34,6 +34,7 @@ function defineInclude() {
 
 #include <string>
 #include <cmath>
+#include <cstdlib>
 #include <cassert>
 
 #if defined(_WIN32)
@@ -76,7 +77,7 @@ private:
         assert(h != nullptr);
         return (void*)h;
 #else
-        void *h = dlopen(WStringToString(path), RTLD_LAZY | RTLD_LOCAL);
+        void *h = dlopen(wstringToString(path).c_str(), RTLD_LAZY | RTLD_LOCAL);
         assert(h != nullptr);
         return h;
 #endif
@@ -95,13 +96,16 @@ private:
 #endif
     }
 
-    std::string WStringToString(const std::wstring& wstr)
-    {
-        std::string str;
-        size_t size;
-        str.resize(wstr.length());
-        wcstombs_s(&size, &str[0], str.size() + 1, wstr.c_str(), wstr.size());
-        return str;
+    std::string wstringToString(const std::wstring& wstr) {
+        size_t size_needed = std::wcstombs(nullptr, wstr.c_str(), 0);
+
+        if (size_needed == (size_t)-1) return "";
+
+        std::vector<char> buffer(size_needed + 1);
+
+        std::wcstombs(buffer.data(), wstr.c_str(), size_needed + 1);
+
+        return std::string(buffer.data());
     }
 
 public:
