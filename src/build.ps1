@@ -1,0 +1,2 @@
+dotnet publish -r win-x64 -c Release --self-contained true FlowBridger/FlowBridger.csproj
+Copy-Item -Path "FlowBridger\bin\Release\net10.0\win-x64\native\FlowBridger.exe" -Destination "C:\work\Repositories\flowbridger.exe" 
