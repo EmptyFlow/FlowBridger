@@ -2,8 +2,8 @@
   "profiles": {
     "FlowBridger": {
       "commandName": "Project",
-      "commandLineArgs": "generate src/FlowBridger.UnitTests/fullspecschema.spec -l=Embedded.CSharp.Import:src/FlowBridgerTestLibrary Embedded.Cpp.DynamicLinking:src/CPlusPlusTest/CppTest/flowbridger Embedded.Cpp.RuntimeLoading:src/CPlusPlusTest/CppRuntimeTest",
-      "workingDirectory": "C:/work/Repositories/FlowBridger/Repository/FlowBridger"
+      "commandLineArgs": "generate localcachechecker.fbschema -l=Embedded.CSharp.Import:. Embedded.Cpp.RuntimeLoading:C:/work/Repositories/Anilibria.Qt/Repository/anilibria-winmaclinux/src/Classes/Services",
+      "workingDirectory": "C:/work/Repositories/LocalCacheChecker/LocalCacheChecker/LocalCacheCheckerLibrary"
     }
   }
 }
